@@ -1,9 +1,7 @@
 <template>
-  <div ref="scrollContainer" class="h-[calc(100vh)] overflow-y-auto flex justify-center main">
+  <PinDetail :item="selectedItem" class="w-[100vw] mx-auto" />
+  <div ref="scrollContainer" class="h-[calc(110vh)] overflow-y-auto flex justify-center main">
     <div>
-      <div>
-        <PinDetail :item="selectedItem" />
-      </div>
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 auto-cols-max gap-4 mx-auto">
         <div v-for="item in items" :key="item.id" class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[14vw]">
