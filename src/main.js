@@ -1,13 +1,8 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-<<<<<<< Updated upstream
-
-import App from "./App.vue";
-=======
 import App from "./App.vue";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
->>>>>>> Stashed changes
 import router from "./router";
 
 import "bootstrap";

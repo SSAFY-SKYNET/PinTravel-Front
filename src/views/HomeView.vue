@@ -1,7 +1,4 @@
 <template>
-
-
-
   <div ref="scrollContainer" class="h-[calc(100vh)] overflow-y-auto flex justify-center main">
     <div>
       <div>
@@ -9,7 +6,6 @@
       </div>
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 auto-cols-max gap-4 mx-auto">
-
         <div v-for="item in items" :key="item.id" class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[14vw]">
           <PinItem :item="item" @click="onClick(item)" />
         </div>
@@ -22,7 +18,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAllAttractionsByPage } from "@/api/attraction-info";
+import { getPinByPage } from "@/api/Pin";
 import PinDetail from "@/components/PinDetail.vue";
 import PinItem from "@/components/PinItem.vue";
 const items = ref([]);
@@ -44,8 +40,9 @@ onMounted(async () => {
       const entry = entries[0];
       if (entry.isIntersecting) {
         console.log("마지막 요소가 보임 - 스크롤바 없음 또는 끝에 도달");
-        const newItems = await getAllAttractionsByPage(page.value, limit);
+        const newItems = await getPinByPage(page.value, limit);
         items.value.push(...newItems);
+        console.log(items.value)
         page.value++;
       } else {
         console.log("마지막 요소가 안 보임 - 스크롤바 존재");
@@ -80,4 +77,4 @@ onMounted(async () => {
   background: rgb(255, 255, 255);
   /*스크롤바 뒷 배경 색상*/
 }
-</style>
+</style>@/api/Pin

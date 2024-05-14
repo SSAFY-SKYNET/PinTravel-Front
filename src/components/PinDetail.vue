@@ -1,6 +1,6 @@
 <template>
     <div v-if="item" class="w-full md:w-[400px] flex justify-center items-center mb-4 rounded-lg">
-        <div><img :src="item.firstImage" alt="" class=" rounded-lg"></div>
+        <div><img :src="item.imageUrl" alt="" class=" rounded-lg"></div>
         <div> {{ item.title }}
             {{ item.addr1 }}</div>
     </div>

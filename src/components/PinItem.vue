@@ -1,8 +1,8 @@
 <template>
   <div @click="handleClick">
 
-    <img :src="item.firstImage" class="rounded-lg" />
-    <p>{{ item.title }}</p>
+    <img :src="item.imageUrl" class="rounded-lg" />
+    <!-- <p>{{ item.title }}</p> -->
   </div>
 </template>
 <script setup>
@@ -16,4 +16,6 @@ const emit = defineEmits(['click']);
 const handleClick = () => {
   emit('click', props.item);
 };
+
+
 </script>
