@@ -38,7 +38,7 @@ const page = ref(1);
 const limit = 30;
 const scrollContainer = ref(null);
 const observerElement = ref(null);
-
+const isLoading = ref(false);
 let observer;
 
 const loadItems = async () => {
@@ -48,11 +48,11 @@ const loadItems = async () => {
 };
 
 onMounted(async () => {
-  console.log("asd");
   observer = new IntersectionObserver(
     async (entries) => {
       const entry = entries[0];
       if (entry.isIntersecting) {
+        console.log("asd");
         await loadItems();
       }
     },
@@ -62,7 +62,6 @@ onMounted(async () => {
   );
 
   observer.observe(observerElement.value);
-  await loadItems();
 });
 </script>
 

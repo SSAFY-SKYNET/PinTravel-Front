@@ -10,14 +10,11 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@egjs/vue3-infinitegrid": "^4.4.0",
-    "@yeger/vue-masonry-wall": "^5.0.10",
+    "@egjs/vue3-infinitegrid": "^4.11.1",
     "axios": "^1.6.8",
-    "bootstrap": "^5.3.3",
     "pinia": "^2.1.7",
     "tailwindcss": "^3.4.3",
     "vue": "^3.4.21",
-    "vue-flipbook": "^1.0.0",
     "vue-router": "^4.3.0",
     "vue3-kakao-maps": "^2.3.2"
   },

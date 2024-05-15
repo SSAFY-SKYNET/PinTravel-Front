@@ -4,6 +4,7 @@ import App from "./App.vue";
 
 import router from "./router";
 import "./assets/index.css";
+import { VueMasonryPlugin } from "vue-masonry";
 
 import { useKakao } from "vue3-kakao-maps/@utils";
 
@@ -12,5 +13,6 @@ useKakao("99fc72f6b7787160e7e76150caeb56fa");
 
 app.use(createPinia());
 app.use(router);
+app.use(VueMasonryPlugin);
 
 app.mount("#app");

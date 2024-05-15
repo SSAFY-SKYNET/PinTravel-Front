@@ -7,7 +7,7 @@ const getPinByPage = async (page = 1, limit = 30) => {
   const response = await axios
     .get(`${API_URL}/pin/likes/page?page=${page}&limit=${limit}`)
     .catch((err) => console.error(err));
-
+  console.log(response.data);
   return response.data;
 };
 
