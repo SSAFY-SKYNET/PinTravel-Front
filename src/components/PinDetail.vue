@@ -1,30 +1,51 @@
 <template>
-    <div v-if="item" class="w-full flex justify-center items-center mb-4 rounded-lg border">
-        <div><img :src="item.imageUrl" alt="" class="rounded-lg w-full h-auto"></div>
-        <div>
-            {{ item.title }}
-            <p v-if="!showFullDescription">{{ item.description.substring(0, 100) }}...</p>
-            <p v-else>{{ item.description }}</p>
-            <button @click="toggleDescription">{{ showFullDescription ? '접기' : '더보기' }}</button>
-        </div>
+  <div
+    class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-full"
+  >
+    <div v-if="dataLoaded" class="w-full p-2 flex flex-row h-[50%]">
+      <PhotoDisplay class="w-1/2 border p-2" :imageUrl="item.imageUrl" />
+      <MapDisplay
+        class="w-1/2 border p-2"
+        :latitude="item.latitude"
+        :longitude="item.longitude"
+      />
     </div>
+    <div v-if="dataLoaded" class="w-full p-2 flex flex-col h-[50%]">
+      <DescriptionBox :title="item.title" :description="item.description" />
+      <CommentBox :comments="item.comments" />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import PhotoDisplay from "./detail/PhotoDisplay.vue";
+import MapDisplay from "./detail/MapDisplay.vue";
+import DescriptionBox from "./detail/DescriptionBox.vue";
+import CommentBox from "./detail/CommentBox.vue";
+import { getPinDetailById } from "../api/pin";
 
-const props = defineProps({
-    item: {
-        type: Object,
-        required: true,
-    },
+const item = ref({});
+const route = useRoute();
+const dataLoaded = ref(false);
+const showMore = ref(false);
+
+const loadData = async () => {
+  if (route.params.id) {
+    try {
+      const res = await getPinDetailById(route.params.id);
+      item.value = res;
+      dataLoaded.value = true;
+    } catch (error) {
+      console.error("Failed to fetch pin details:", error);
+    }
+  }
+};
+
+onMounted(() => {
+  loadData();
 });
-
-const showFullDescription = ref(false);
-
-function toggleDescription() {
-    showFullDescription.value = !showFullDescription.value;
-}
 </script>
 
-<style lang="css" scoped></style>
+<style scoped></style>

@@ -1,49 +1,59 @@
 <template>
-  <PinDetail :item="selectedItem" class="w-[100vw] mx-auto" />
-  <div ref="scrollContainer" class="h-[calc(110vh)] overflow-y-auto flex justify-center main">
+  <div
+    ref="scrollContainer"
+    class="h-[calc(100vh)] overflow-y-auto flex justify-center main"
+  >
     <div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 auto-cols-max gap-4 mx-auto">
-        <div v-for="item in items" :key="item.id" class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[14vw]">
-          <PinItem :item="item" @click="onClick(item)" />
+      <PinDetail v-if="true" class="w-[100vw] h-[calc(80vh)] mx-auto" />
+      <div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto"
+        >
+          <div
+            v-for="item in items"
+            :key="item.id"
+            class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[18vw]"
+          >
+            <router-link :to="`/pin/${item.pinId}`">
+              <PinItem :item="item" />
+            </router-link>
+          </div>
+          <div ref="observerElement" style="height: 1px"></div>
         </div>
-        <div ref="observerElement" style="height: 1px"></div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getPinByPage } from "@/api/Pin";
+import { useRouter } from "vue-router";
+import { getPinByPage } from "@/api/pin";
 import PinDetail from "@/components/PinDetail.vue";
 import PinItem from "@/components/PinItem.vue";
+
+const router = useRouter();
 const items = ref([]);
-let page = ref(1);
+const page = ref(1);
 const limit = 30;
-const selectedItem = ref(null);
 const scrollContainer = ref(null);
 const observerElement = ref(null);
-const onClick = (item) => {
-  console.log("clicked", item);
-  selectedItem.value = item;
-  items.value = [];
-  page.value = 1;
-};
+
 let observer;
+
+const loadItems = async () => {
+  const newItems = await getPinByPage(page.value, limit);
+  items.value.push(...newItems);
+  page.value++;
+};
+
 onMounted(async () => {
+  console.log("asd");
   observer = new IntersectionObserver(
     async (entries) => {
       const entry = entries[0];
       if (entry.isIntersecting) {
-        console.log("마지막 요소가 보임 - 스크롤바 없음 또는 끝에 도달");
-        const newItems = await getPinByPage(page.value, limit);
-        items.value.push(...newItems);
-        console.log(items.value)
-        page.value++;
-      } else {
-        console.log("마지막 요소가 안 보임 - 스크롤바 존재");
+        await loadItems();
       }
     },
     {
@@ -52,12 +62,11 @@ onMounted(async () => {
   );
 
   observer.observe(observerElement.value);
+  await loadItems();
 });
-
-
 </script>
 
-<style>
+<style scoped>
 /* 스크롤바의 폭 너비 */
 .main::-webkit-scrollbar {
   width: 5px;
@@ -66,13 +75,12 @@ onMounted(async () => {
 .main::-webkit-scrollbar-thumb {
   background: rgb(87, 87, 87);
   /* 스크롤바 색상 */
-
   border-radius: 10px;
   /* 스크롤바 둥근 테두리 */
 }
 
 .main::-webkit-scrollbar-track {
   background: rgb(255, 255, 255);
-  /*스크롤바 뒷 배경 색상*/
+  /* 스크롤바 뒷 배경 색상 */
 }
-</style>@/api/Pin
+</style>

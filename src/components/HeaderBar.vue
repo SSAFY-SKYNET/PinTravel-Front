@@ -1,38 +1,43 @@
 <template>
   <header
-    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-        <use xlink:href="#bootstrap"></use>
-      </svg>
-      Pintravel
-    </a>
+    class="flex flex-wrap items-center justify-between py-3 mb-4 border-b"
+  >
+    <div class="md:flex-1">
+      <a href="/" class="text-xl font-bold">pintravel</a>
+    </div>
+    <div class="md:flex-1">
+      <input type="text" placeholder="검색" class="border rounded p-1" />
+      <button class="bg-blue-500 text-white rounded p-1">검색</button>
+    </div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-      <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-      <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
-      <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-      <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
-    </ul>
-    <!-- <input type="search" class="form-control" placeholder="Search..."> -->
-
-    <div class="col-md-4 text-end">
-      <button type="button" class="btn btn-outline-primary me-2" @click="login">Login</button>
-      <button type="button" class="btn btn-primary">Sign-up</button>
+    <div class="md:flex-1 text-right">
+      <button
+        v-if="!isLoggedIn"
+        @click="login"
+        class="bg-blue-500 text-white rounded p-1"
+      >
+        로그인
+      </button>
+      <div v-else>
+        <button @click="logout" class="bg-red-500 text-white rounded p-1">
+          로그아웃
+        </button>
+        <button class="bg-green-500 text-white rounded p-1">프로필</button>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
+const isLoggedIn = true;
 const login = () => {
-  router.push('/login')
-}
+  router.push("/login");
+};
 </script>
 
-<style scoped>
-/* 필요한 스타일은 여기에 추가하세요. */
+<style>
+/* 추가적인 스타일링이 필요하면 여기에 작성 */
 </style>

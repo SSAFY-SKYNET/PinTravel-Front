@@ -1,21 +1,18 @@
 <template>
   <div @click="handleClick">
-
     <img :src="item.imageUrl" class="rounded-lg" />
-    <!-- <p>{{ item.title }}</p> -->
   </div>
 </template>
+
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
-  item: Object
+  item: Object,
 });
-const emit = defineEmits(['click']);
+const emit = defineEmits(["click"]);
 
 const handleClick = () => {
-  emit('click', props.item);
+  emit("click", props.item);
 };
-
-
 </script>
