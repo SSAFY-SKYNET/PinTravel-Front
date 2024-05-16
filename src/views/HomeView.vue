@@ -19,18 +19,17 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+
 import { getPinByPage } from "@/api/pin";
 import PinDetail from "@/components/PinDetail.vue";
 import PinItem from "@/components/PinItem.vue";
 
-const router = useRouter();
 const items = ref([]);
 const page = ref(1);
 const limit = 30;
 const scrollContainer = ref(null);
 const observerElement = ref(null);
-const isLoading = ref(false);
+
 let observer;
 
 const loadItems = async () => {
@@ -52,9 +51,9 @@ onMounted(async () => {
       root: scrollContainer.value,
     }
   );
-
   observer.observe(observerElement.value);
 });
+
 </script>
 
 <style scoped>

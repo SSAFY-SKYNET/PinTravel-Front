@@ -15,9 +15,8 @@ import { defineProps, ref } from "vue";
 
 const imageLoaded = ref(true);
 
-const props = defineProps({
+defineProps({
   imageUrl: String,
 });
-
 
 </script>

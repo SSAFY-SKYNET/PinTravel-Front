@@ -61,6 +61,7 @@ onMounted(() => {
   console.log("detailview on Mount@!");
   loadData();
 });
+
 </script>
 
 <style scoped></style>
