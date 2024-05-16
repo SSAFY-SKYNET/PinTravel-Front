@@ -34,7 +34,6 @@ const addComment = async () => {
   const commentText = newComment.value; // 댓글 내용을 변수에 저장
   newComment.value = ""; // 입력 필드 초기화
 
-
   comments.value = await insertComment({
     pinId: route.params.id,
     userId: 1, // 임시로 유저 Id 생성

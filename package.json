@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@egjs/vue3-infinitegrid": "^4.11.1",
+    "@egjs/vue3-infinitegrid": "^4.4.0",
+    "@yaireo/tagify": "^4.26.5",
     "axios": "^1.6.8",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.1.7",

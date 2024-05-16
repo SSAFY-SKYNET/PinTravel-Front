@@ -7,6 +7,7 @@ import "./assets/index.css";
 
 
 import { useKakao } from "vue3-kakao-maps/@utils";
+import Tagify from '@yaireo/tagify'
 
 const app = createApp(App);
 useKakao("99fc72f6b7787160e7e76150caeb56fa");
