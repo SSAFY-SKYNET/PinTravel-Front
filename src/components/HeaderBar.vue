@@ -1,7 +1,5 @@
 <template>
-  <header
-    class="flex flex-wrap items-center justify-between py-3 mb-4 border-b"
-  >
+  <header class="flex flex-wrap items-center justify-between py-3 mb-4 border-b">
     <div class="md:flex-1">
       <a href="/" class="text-xl font-bold">pintravel</a>
     </div>
@@ -9,13 +7,8 @@
       <input type="text" placeholder="검색" class="border rounded p-1" />
       <button class="bg-blue-500 text-white rounded p-1">검색</button>
     </div>
-
     <div class="md:flex-1 text-right">
-      <button
-        v-if="!isLoggedIn"
-        @click="login"
-        class="bg-blue-500 text-white rounded p-1"
-      >
+      <button v-if="!isLoggedIn" @click="login" class="bg-blue-500 text-white rounded p-1">
         로그인
       </button>
       <div v-else>

@@ -1,17 +1,23 @@
 <template>
   <div class="photo-display">
-    <img
-      :src="imageUrl"
-      alt="Photo"
-      class="photo h-full w-full object-contain"
-    />
+    <img v-if="imageLoaded" :src="imageUrl" alt="Photo" class="photo h-full w-full object-contain"
+      @load="imageLoaded = true" />
+    <div v-else class="loading-image">
+      <div class="loading-image-text">
+        로딩 중...
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
+
+const imageLoaded = ref(true);
 
 const props = defineProps({
   imageUrl: String,
 });
+
+
 </script>

@@ -12,7 +12,7 @@ const router = createRouter({
       meta: { keepAlive: true },
       children: [
         {
-          path: "/pin/:id",
+          path: "pin/:id",
           name: "pin-detail",
           component: PinDetail,
         },

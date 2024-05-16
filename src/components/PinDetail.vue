@@ -1,18 +1,14 @@
 <template>
-  <div
-    class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-full"
-  >
+  <div class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-full overflow-auto">
     <div v-if="dataLoaded" class="w-full p-2 flex flex-row h-[50%]">
       <PhotoDisplay class="w-1/2 border p-2" :imageUrl="item.imageUrl" />
-      <MapDisplay
-        class="w-1/2 border p-2"
-        :latitude="item.latitude"
-        :longitude="item.longitude"
-      />
+      <MapDisplay class="w-1/2 border p-2" :latitude="item.latitude" :longitude="item.longitude" />
     </div>
-    <div v-if="dataLoaded" class="w-full p-2 flex flex-col h-[50%]">
-      <DescriptionBox :title="item.title" :description="item.description" />
-      <CommentBox :comments="item.comments" />
+    <div v-if="dataLoaded" class="col-span-2 grid grid-rows-3 gap-4">
+      <DescriptionBox class="row-span-2" :title="item.title" :description="item.description" />
+      <button @click="toggleComments" class="p-2 bg-blue-500 text-white rounded">{{ showComments ? '숨기기' : '댓글 보기'
+        }}</button>
+      <CommentBox v-if="showComments" :comments="item.comments" />
     </div>
   </div>
 </template>
@@ -29,7 +25,7 @@ import { getPinDetailById } from "../api/pin";
 const item = ref({});
 const route = useRoute();
 const dataLoaded = ref(false);
-const showMore = ref(false);
+const showComments = ref(false);
 
 const loadData = async () => {
   if (route.params.id) {
@@ -43,7 +39,12 @@ const loadData = async () => {
   }
 };
 
+const toggleComments = () => {
+  showComments.value = !showComments.value;
+};
+
 onMounted(() => {
+  console.log("detailview on Mount@!");
   loadData();
 });
 </script>

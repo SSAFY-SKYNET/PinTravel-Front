@@ -1,6 +1,6 @@
 <template>
-  <div @click="handleClick">
-    <img :src="item.imageUrl" class="rounded-lg" />
+  <div @click="handleClick" class="cursor-pointer h-full w-full">
+    <img :src="item.imageUrl" class="rounded-lg h-full w-full object-cover" />
   </div>
 </template>
 
