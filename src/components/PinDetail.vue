@@ -6,8 +6,22 @@
     </div>
     <div v-if="dataLoaded" class="col-span-2 grid grid-rows-3 gap-4">
       <DescriptionBox class="row-span-2" :title="item.title" :description="item.description" />
-      <button @click="toggleComments" class="p-2 bg-blue-500 text-white rounded">{{ showComments ? '숨기기' : '댓글 보기'
-        }}</button>
+      <div class="flex justify-center">
+        <div v-if="!showComments">
+          <svg @click="toggleComments" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"></path>
+          </svg>
+        </div>
+        <div v-else>
+          <svg @click="toggleComments" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"></path>
+          </svg>
+        </div>
+      </div>
       <CommentBox v-if="showComments" :comments="item.comments" />
     </div>
   </div>
