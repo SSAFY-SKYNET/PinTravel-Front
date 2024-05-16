@@ -1,17 +1,27 @@
-// api/user.js
-import axios from 'axios';
+import { localAxios } from "@/util/http-commons.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const local = localAxios();
 
-const getAllUser = (success, error) => {
-    axios.get(`${API_URL}/user/1`)
-    .then(success)
-    .catch(error);
-};
+async function userConfirm(user, success, fail) {
+    await local.post(`/user/login`, user).then(success).catch(fail);
+}
 
-const login = async (email, password) => {
-        const response = await axios.post(`${API_URL}/user/login`, { email, password });
-    return response.data;
-};
+async function findById(userId, success, fail) {
+    await local.get(`/user/${userId}`).then(success).catch(fail);
+}
 
-export { getAllUser, login };
+async function tokenRegeneration(user, success, fail) {
+    local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken");
+    await local.post(`/user/refresh`, user).then(success).catch(fail);
+}
+
+async function logout(userId, success, fail) {
+    await local.get(`/user/logout/${userId}`).then(success).catch(fail);
+}
+
+async function getUserInfo(token, success, fail) {
+    local.defaults.headers["Authorization"] = token;
+    await local.get(`/user/info`).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenRegeneration, logout, getUserInfo };
