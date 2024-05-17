@@ -2,7 +2,7 @@
   <div class="flex flex-col place-items-center">
     <div class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-auto overflow-auto">
       <div v-if="userInfo" class="flex flex-col items-center p-2">
-        <UserImgDisplay class="mb-2 w-[200px] h-[200px]" :imageUrl="userInfo.profilePicture"/>
+        <UserImgDisplay class="mb-2 w-[200px] h-[200px]" :imageUrl="userInfo.profilePicture" />
         <p class="text-center">{{ userInfo.username }}</p>
         <p class="text-center">{{ userInfo.email }}</p>
         <p class="text-center">팔로워</p>
@@ -11,30 +11,26 @@
     </div>
 
     <div class="flex justify-center space-x-4 my-4">
-      <button
-          class="px-4 py-2 rounded-lg"
-          :class="{ 'bg-blue-500 text-white': activeTab === 'pin', 'bg-gray-200': activeTab !== 'pin' }"
-          @click="activeTab = 'pin'"
-      >
+      <button class="px-4 py-2 rounded-lg"
+        :class="{ 'bg-blue-500 text-white': activeTab === 'pin', 'bg-gray-200': activeTab !== 'pin' }"
+        @click="activeTab = 'pin'">
         핀
       </button>
-      <button
-          class="px-4 py-2 rounded-lg"
-          :class="{ 'bg-blue-500 text-white': activeTab === 'board', 'bg-gray-200': activeTab !== 'board' }"
-          @click="activeTab = 'board'"
-      >
+      <button class="px-4 py-2 rounded-lg"
+        :class="{ 'bg-blue-500 text-white': activeTab === 'board', 'bg-gray-200': activeTab !== 'board' }"
+        @click="activeTab = 'board'">
         보드
       </button>
     </div>
 
     <div v-show="activeTab === 'pin'" ref="pinScrollContainer"
-         class="h-[calc(100vh-400px)] w-full overflow-y-auto flex justify-center pin-main">
+      class="h-[calc(100vh-400px)] w-full overflow-y-auto flex justify-center pin-main">
       <div>
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto">
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto">
           <div v-for="item in pins" :key="item.pinId" class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[18vw]">
             <router-link :to="`/pin/${item.pinId}`">
-              <PinItem :item="item"/>
+              <PinItem :item="item" />
             </router-link>
           </div>
           <div ref="pinObserverElement" style="height: 1px"></div>
@@ -43,14 +39,14 @@
     </div>
 
     <div v-show="activeTab === 'board'" ref="boardScrollContainer"
-         class="h-[calc(100vh-400px)] w-full overflow-y-auto flex justify-center board-main">
+      class="h-[calc(100vh-400px)] w-full overflow-y-auto flex justify-center board-main">
       <div>
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto">
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto">
           <div v-for="board in boards" :key="board.boardId"
-               class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[18vw]">
+            class="w-[90vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[18vw]">
             <router-link :to="`/board/${board.boardId}`">
-              <BoardItem :item="board"/>
+              <BoardItem :item="board" />
             </router-link>
           </div>
           <div ref="boardObserverElement" style="height: 1px"></div>
@@ -61,18 +57,18 @@
 </template>
 
 <script setup>
-import {onMounted, ref, nextTick} from 'vue';
-import {useUserStore} from "../stores/user";
-import {storeToRefs} from "pinia";
+import { onMounted, ref, nextTick } from 'vue';
+import { useUserStore } from "../stores/user";
+import { storeToRefs } from "pinia";
 import UserImgDisplay from "@/components/user/UserImgDisplay.vue";
-import {getBoardByUserId} from "@/api/board.js"
+import { getBoardByUserId } from "@/api/board.js"
 import BoardItem from "@/components/board/BoardItem.vue";
-import {getPinByUserId} from "@/api/pin.js";
+import { getPinByUserId } from "@/api/pin.js";
 import PinItem from "@/components/PinItem.vue";
 
 const userStore = useUserStore()
-const {userInfo} = storeToRefs(userStore);
-const {getUserInfo} = userStore
+const { userInfo } = storeToRefs(userStore);
+const { getUserInfo } = userStore
 
 const activeTab = ref('pin');
 
@@ -128,16 +124,16 @@ onMounted(async () => {
   await nextTick(async () => {
     // Pin IntersectionObserver 설정
     pinObserver = new IntersectionObserver(
-        async (entries) => {
-          const entry = entries[0];
-          if (entry.isIntersecting) {
-            console.log("Loading more pins...");
-            await loadPins();
-          }
-        },
-        {
-          root: pinScrollContainer.value,
+      async (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          console.log("Loading more pins...");
+          await loadPins();
         }
+      },
+      {
+        root: pinScrollContainer.value,
+      }
     );
 
     // pinObserverElement 관찰 시작
@@ -147,16 +143,16 @@ onMounted(async () => {
 
     // Board IntersectionObserver 설정
     boardObserver = new IntersectionObserver(
-        async (entries) => {
-          const entry = entries[0];
-          if (entry.isIntersecting) {
-            console.log("Loading more boards...");
-            await getBoardList();
-          }
-        },
-        {
-          root: boardScrollContainer.value,
+      async (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          console.log("Loading more boards...");
+          await getBoardList();
         }
+      },
+      {
+        root: boardScrollContainer.value,
+      }
     );
 
     // boardObserverElement 관찰 시작
@@ -199,4 +195,4 @@ onMounted(async () => {
   background: rgb(255, 255, 255);
   /* 스크롤바 뒷 배경 색상 */
 }
-</style>
+</style>../store/user../store/user

@@ -42,7 +42,7 @@ const selectPinByMultiTagAndPage = async (tags, page = 10, limit = 30) => {
   }
 };
 
-export { getPinByPage, getPinDetailById, selectPinByMultiTagAndPage };
+
 const getPinByUserId = async (userId, page = 1, limit = 30) => {
   const response = await axios
       .get(`${API_URL}/pin/user/${userId}/page?page=${page}&limit=${limit}`)
@@ -51,4 +51,4 @@ const getPinByUserId = async (userId, page = 1, limit = 30) => {
   return response.data;
 };
 
-export { getPinByPage, getPinDetailById, getPinByUserId };
+export { getPinByPage, getPinDetailById, getPinByUserId ,selectPinByMultiTagAndPage};

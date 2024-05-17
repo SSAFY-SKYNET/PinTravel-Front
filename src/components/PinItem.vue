@@ -1,6 +1,6 @@
 <template>
   <div @click="handleClick" class="cursor-pointer h-full w-full">
-    <img :src="pin.imageUrl" class="rounded-lg h-full w-full object-cover" />
+    <img :src="item.imageUrl" class="rounded-lg h-full w-full object-cover" />
   </div>
 </template>
 
@@ -9,13 +9,13 @@
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
-  pin: Object,
+  item: Object,
 });
 
 const emit = defineEmits(["click"]);
 
 const handleClick = () => {
-  emit("click", props.pin);
+  emit("click", props.item);
 };
 
 

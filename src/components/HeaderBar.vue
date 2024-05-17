@@ -33,6 +33,9 @@ import { ref, onMounted } from "vue";
 import { selectTagByInput } from "../api/tag";
 import Tagify from '@yaireo/tagify';
 
+import { useUserStore } from "../stores/user";
+import { storeToRefs } from "pinia";
+
 const router = useRouter();
 
 
