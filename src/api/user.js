@@ -24,4 +24,8 @@ async function getUserInfo(token, success, fail) {
     await local.get(`/user/info`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, getUserInfo };
+async function userSignup(formData, success, fail) {
+    await local.post(`/user/signup`, formData).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenRegeneration, logout, getUserInfo, userSignup };
