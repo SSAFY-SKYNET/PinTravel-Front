@@ -62,7 +62,7 @@
 
 <script setup>
 import {onMounted, ref, nextTick} from 'vue';
-import {useUserStore} from "../stores/user";
+import {useUserStore} from "@/stores/user";
 import {storeToRefs} from "pinia";
 import UserImgDisplay from "@/components/user/UserImgDisplay.vue";
 import {getBoardByUserId} from "@/api/board.js"

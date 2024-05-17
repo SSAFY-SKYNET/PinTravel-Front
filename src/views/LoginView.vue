@@ -18,7 +18,9 @@
           </div>
           <button class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" type="submit" @click.prevent="submitForm">로그인</button>
           <hr class="my-4">
-          <small class="text-muted">계정이 없으신가요? 지금 가입하세요.</small>
+          <small class="text-muted">계정이 없으신가요?
+            <button @click="goToSignUp">회원가입하기</button>
+          </small>
         </form>
       </div>
     </div>
@@ -50,6 +52,10 @@ const submitForm = async () => {
     router.push("/");
   }
 };
+
+const goToSignUp = () => {
+  router.push("/signup")
+}
 </script>
 
 <style scoped>

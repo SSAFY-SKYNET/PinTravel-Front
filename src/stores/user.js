@@ -3,7 +3,7 @@ import {useRoute} from "vue-router";
 import {defineStore} from "pinia";
 import {jwtDecode} from "jwt-decode";
 
-import {userConfirm, findById, tokenRegeneration, logout} from "@/api/user.js"
+import {userConfirm, findById, tokenRegeneration, logout, userSignup} from "@/api/user.js"
 import {httpStatusCode} from "@/util/http-status.js";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -12,6 +12,7 @@ export const useUserStore = defineStore("userStore", () => {
     const isLoginError = ref(null)
     const userInfo = ref(null)
     const isValidToken = ref(null)
+    const isSignupError = ref(null);
 
     const userLogin = async (loginUser) => {
         await userConfirm(
@@ -131,14 +132,35 @@ export const useUserStore = defineStore("userStore", () => {
         }
     };
 
+    const userSignUp = async (formData) => {
+        await userSignup(
+            formData,
+            (response) => {
+                if (response.status === httpStatusCode.OK) {
+                    isSignupError.value = false;
+                    console.log("회원가입 성공");
+                } else {
+                    isSignupError.value = true;
+                    console.log("회원가입 실패");
+                }
+            },
+            (error) => {
+                isSignupError.value = true;
+                console.error(error);
+            }
+        );
+    };
+
     return {
         isLogin,
         isLoginError,
         userInfo,
         isValidToken,
+        isSignupError,
         userLogin,
         getUserInfo,
         tokenRegenerate,
-        userLogout
+        userLogout,
+        userSignUp
     }
 })
