@@ -21,4 +21,25 @@ const getPinDetailById = async (id) => {
   }
 };
 
-export { getPinByPage, getPinDetailById };
+const selectPinByMultiTagAndPage = async (tags, page = 10, limit = 30) => {
+  
+  try {
+    const response = await axios.post(`${API_URL}/pin/multi-tag`, tags, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      params: {
+        page,
+        limit
+      }
+
+    });
+    console.log("selectPinByMultiTagAndPage", response.data)
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export { getPinByPage, getPinDetailById, selectPinByMultiTagAndPage };

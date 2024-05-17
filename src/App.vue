@@ -1,34 +1,37 @@
 <template>
-  <HeaderBar />
-  <!-- <KeepAlive> -->
-    <RouterView :key="$route.path" />
-  <!-- </KeepAlive> -->
+  <HeaderBar @search="handleSearch" />
+  <RouterView :key="$route.path" :searchTags="searchTags" />
 </template>
 
 <script setup>
 import HeaderBar from "./components/HeaderBar.vue";
+import { ref } from "vue";
+
+const searchTags = ref([]);
+
+const handleSearch = async (tags) => {
+  searchTags.value = tags;
+  console.log(searchTags.value)
+};
 </script>
 
 <style lang="css">
 body {
   overflow-y: hidden;
+}/* 스크롤바의 폭 너비 */
+.main::-webkit-scrollbar {
+    width: 5px;
 }
 
-.masonry {
-  display: flex;
-  margin-left: -16px;
-  /* gutter size */
-  width: auto;
+.main::-webkit-scrollbar-thumb {
+    background: rgb(87, 87, 87);
+    /* 스크롤바 색상 */
+    border-radius: 10px;
+    /* 스크롤바 둥근 테두리 */
 }
 
-.masonry-column {
-  padding-left: 16px;
-  /* gutter size */
-  background-clip: padding-box;
-}
-
-.masonry-item {
-  margin-bottom: 16px;
-  /* gutter size */
+.main::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+    /* 스크롤바 뒷 배경 색상 */
 }
 </style>

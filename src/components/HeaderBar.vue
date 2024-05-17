@@ -9,14 +9,6 @@
         <div class="relative"> <!-- relative 위치 추가 -->
           <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded p-1 w-full"
             @input="handleInput($event)" />
-
-          <!-- <div v-if="tags.length > 0" class="absolute bg-white border mt-1 w-full">
-            <ul>
-              <li v-for="tag in tags" :key="tag.id" @click="selectTag(tag)">
-                {{ tag.name }}
-              </li>
-            </ul>
-          </div> -->
         </div>
         <button class="bg-blue-500 text-white rounded p-1 ml-2" @click.prevent="search">검색</button>
       </form>
@@ -37,41 +29,37 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { selectTagByInput } from "../api/tag";
-import { useUserStore } from "../stores/user";
-import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
 import Tagify from '@yaireo/tagify';
 
 const router = useRouter();
 
+
 const tagInput = ref(null);
-const inputValue = ref(""); // 입력값을 저장할 반응형 참조
-
+const inputValue = ref("");
 const tags = ref([]);
+const selectedTags = ref([]);
 const placeholder = ref("태그 검색");
+const isLogin = ref(false);
 
-const userStore = useUserStore()
-const { isLogin } = storeToRefs(userStore);
-const { userLogout } = userStore
-const logout = async () => {
-  await userLogout();
-  router.push('/');
-};
+
+
 const checkLoginStatus = () => {
   const token = sessionStorage.getItem('accessToken');
-  if (token) {
-    userStore.isLogin = true;
-  } else {
-    userStore.isLogin = false;
-  }
+  isLogin.value = !!token;
+};
+
+const logout = async () => {
+  sessionStorage.removeItem('accessToken');
+  isLogin.value = false;
+  router.push('/');
 };
 
 onMounted(() => {
-  checkLoginStatus()
+  checkLoginStatus();
   const tagify = new Tagify(tagInput.value, {
-    whitelist: tags.value, // 초기 화이트리스트 설정
+    whitelist: tags.value,
     dropdown: {
       maxItems: 6,
       classname: "tags-look",
@@ -80,30 +68,34 @@ onMounted(() => {
     }
   });
 
-  // Tagify의 input 이벤트 리스너 설정
   tagify.on('input', async e => {
-    inputValue.value = e.detail.value; // 입력값 업데이트
-    tags.value = await selectTagByInput(inputValue.value); // API 호출을 통해 태그 데이터 가져오기
-    tagify.settings.whitelist = tags.value.map(tag => tag.name); // 화이트리스트 업데이트
-    tagify.dropdown.show.call(tagify, inputValue.value); // 드롭다운 갱신
-    console.log("현재 입력값:", inputValue.value);
-    console.log("tags.value : ", tags.value);
-    tags.value = []
+    inputValue.value = e.detail.value;
+    tags.value = await selectTagByInput(inputValue.value);
+    tagify.settings.whitelist = tags.value.map(tag => tag.name);
+    tagify.dropdown.show.call(tagify, inputValue.value);
   });
+
+  tagify.on('add', e => {
+    selectedTags.value.push(e.detail.data.value);
+  });
+
+  tagify.on('remove', e => {
+    selectedTags.value = selectedTags.value.filter(tag => tag !== e.detail.data.value);
+  });
+
 });
+
+const search = () => {
+  const queryTags = selectedTags.value.join(',');
+  router.push({ name: 'search', query: { tags: queryTags } });
+};
 
 const handleInput = async (input) => {
   tags.value = await selectTagByInput(input);
-  console.log("tags.value : ", tags.value)
 };
-
 const login = () => {
   router.push("/login");
 };
-
-const search = () => {
-  console.log(tagInput.value)
-}
 </script>
 
 <style>

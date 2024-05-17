@@ -1,11 +1,11 @@
-// api/magazine.js
+// api/tag.js
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const selectTagsByMultipleInputs = async (inputs, pageSize = 10, pageNum = 1) => {
   try {
-    const response = await axios.post(`${API_URL}/search`, inputs, {
+    const response = await axios.post(`${API_URL}/tags/search`, inputs, {
       params: {
         pageSize,
         pageNum
