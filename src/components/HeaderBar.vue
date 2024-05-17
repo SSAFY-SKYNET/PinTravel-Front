@@ -28,7 +28,7 @@
         <button type="button" class="btn btn-primary">Sign-up</button>
       </div>
       <div v-else>
-        <button type="button" class="btn btn-primary me-2">MyPage</button>
+        <button type="button" class="btn btn-primary me-2" @click="mypage">MyPage</button>
         <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
       </div>
     </div>
@@ -55,10 +55,7 @@ const placeholder = ref("태그 검색");
 const userStore = useUserStore()
 const { isLogin } = storeToRefs(userStore);
 const { userLogout } = userStore
-const logout = async () => {
-  await userLogout();
-  router.push('/');
-};
+
 const checkLoginStatus = () => {
   const token = sessionStorage.getItem('accessToken');
   if (token) {
@@ -101,8 +98,13 @@ const login = () => {
   router.push("/login");
 };
 
-const search = () => {
-  console.log(tagInput.value)
+const logout = async () => {
+  await userLogout();
+  router.push('/');
+};
+
+const mypage = () => {
+  router.push('/mypage');
 }
 </script>
 

@@ -21,4 +21,12 @@ const getPinDetailById = async (id) => {
   }
 };
 
-export { getPinByPage, getPinDetailById };
+const getPinByUserId = async (userId, page = 1, limit = 30) => {
+  const response = await axios
+      .get(`${API_URL}/pin/user/${userId}/page?page=${page}&limit=${limit}`)
+      .catch((err) => console.error(err));
+
+  return response.data;
+};
+
+export { getPinByPage, getPinDetailById, getPinByUserId };
