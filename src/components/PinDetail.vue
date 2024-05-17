@@ -58,10 +58,13 @@ const toggleComments = () => {
 };
 
 onMounted(() => {
-  console.log("detailview on Mount@!");
+  console.log("detailview on Mount@!", route.params.id);
+
   loadData();
 });
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

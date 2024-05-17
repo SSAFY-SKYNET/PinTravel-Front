@@ -22,7 +22,7 @@ const getPinDetailById = async (id) => {
 };
 
 const selectPinByMultiTagAndPage = async (tags, page = 10, limit = 30) => {
-  
+  console.log("selectPinByMultiTagAndPage",tags)
   try {
     const response = await axios.post(`${API_URL}/pin/multi-tag`, tags, {
       headers: {
@@ -32,9 +32,8 @@ const selectPinByMultiTagAndPage = async (tags, page = 10, limit = 30) => {
         page,
         limit
       }
-
     });
-    console.log("selectPinByMultiTagAndPage", response.data)
+    // console.log("selectPinByMultiTagAndPage", response.data)
     return response.data;
   } catch (error) {
     console.error(error);

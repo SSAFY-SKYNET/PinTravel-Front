@@ -14,25 +14,37 @@
 
 import PinItemList from "@/components/PinItemList.vue";
 import PinDetail from "@/components/PinDetail.vue";
+import { selectTagByPinId } from "@/api/pintag.js";
 
 import { ref, onMounted } from "vue";
-import { getPinByPage } from "@/api/pin";
+import { useRoute } from "vue-router";
+import { selectPinByMultiTagAndPage } from "@/api/pin.js";
+import { selectTagsByIds } from "@/api/tag.js";
 
+const route = useRoute();
 const items = ref([]);
 const page = ref(1);
 const limit = 30;
 const scrollContainer = ref(null);
 const observerElement = ref(null);
-
+const pinId = route.params.id;
+const tags = ref([]);
+const tagsName = ref([]);
 let observer;
 
+
+
 const loadItems = async () => {
-    const newItems = await getPinByPage(page.value, limit);
+    const newItems = await selectPinByMultiTagAndPage(tagsName.value, page.value, limit);
     items.value.push(...newItems);
     page.value++;
 };
 
 onMounted(async () => {
+    tags.value = await selectTagByPinId(pinId);
+    console.log(tags.value);
+    tagsName.value = (await selectTagsByIds(tags.value)).map(tag => tag.name);
+    console.log(tagsName.value);
     observer = new IntersectionObserver(
         async (entries) => {
             const entry = entries[0];

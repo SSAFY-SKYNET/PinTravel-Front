@@ -43,13 +43,7 @@ const addComment = async () => {
 
 
 onMounted(async () => {
-
   comments.value = await getCommentByPinId(route.params.id)
-
-  console.log(await getCommentByPinId(route.params.id));
-
-  // comments.value = res.data
-
 })
 
 </script>

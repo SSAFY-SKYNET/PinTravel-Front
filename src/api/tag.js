@@ -31,7 +31,20 @@ const selectTagsByMultipleInputs = async (inputs, pageSize = 10, pageNum = 1) =>
       console.error(err);
       return null;
     }
-  };
 
+    
+};
 
-export { selectTagsByMultipleInputs ,selectTagByInput};
+const selectTagsByIds = async (ids) => {
+  try {
+    const response = await axios.post(`${API_URL}/tags/multi`, ids);
+    console.log("selectTagsByIds",response.data)
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+  
+
+export { selectTagsByMultipleInputs ,selectTagByInput , selectTagsByIds};
