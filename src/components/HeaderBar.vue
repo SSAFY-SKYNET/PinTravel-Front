@@ -35,9 +35,6 @@ import Tagify from '@yaireo/tagify';
 import {useUserStore} from "@/stores/user.js";
 import {storeToRefs} from "pinia";
 
-import { useUserStore } from "../stores/user";
-import { storeToRefs } from "pinia";
-
 const router = useRouter();
 
 
