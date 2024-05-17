@@ -24,10 +24,8 @@ const selectTagsByMultipleInputs = async (inputs, pageSize = 10, pageNum = 1) =>
       input = String(input);  // input을 문자열로 변환
     }
     const encodedInput = encodeURIComponent(input);
-    console.log(encodedInput);
     try {
       const response = await axios.get(`${API_URL}/tags/search/${encodedInput}`);
-      console.log(response.data);
       return response.data;
     } catch (err) {
       console.error(err);

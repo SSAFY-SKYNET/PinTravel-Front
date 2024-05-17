@@ -1,49 +1,37 @@
 <template>
-  <header class="flex flex-wrap items-center justify-between py-3 mb-4 border-b">
+  <header class="flex flex-wrap items-center justify-space-between py-3 mb-4 border-b">
     <div class="md:flex-1">
       <a href="/" class="text-xl font-bold">pintravel</a>
     </div>
-    <form class="max-w-sm mx-auto">
-      <select id="countries"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
-        <option value="tags">tags</option>
-      </select>
-    </form>
-    <form class="max-w-sm mx-auto">
-      <select id="countries"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <div class="flex-grow flex justify-center items-center">
+      <form class="flex">
+        <div class="relative"> <!-- relative 위치 추가 -->
+          <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded p-1 w-full"
+            @input="handleInput($event)" />
 
-        <option value="like">like</option>
-        <option value="location">location</option>
-        <option value="comment">comment</option>
-      </select>
-    </form>
-    <div class="md:flex-1 flex">
-      <!-- 입력 필드와 검색 버튼을 flex 컨테이너로 감싸기 -->
-      <div class="flex-grow relative"> <!-- relative 위치 추가 -->
-        <input type="text" placeholder="검색" class="border rounded p-1 w-full" v-model="input"
-          @input="handleInput($event)" />
-        <!-- 태그 제안 드롭다운 -->
-        <div v-if="tags.length > 0" class="absolute bg-white border mt-1 w-full">
-          <ul>
-            <li v-for="tag in tags" :key="tag.id" @click="selectTag(tag)">
-              {{ tag.name }}
-            </li>
-          </ul>
+          <!-- <div v-if="tags.length > 0" class="absolute bg-white border mt-1 w-full">
+            <ul>
+              <li v-for="tag in tags" :key="tag.id" @click="selectTag(tag)">
+                {{ tag.name }}
+              </li>
+            </ul>
+          </div> -->
         </div>
-      </div>
-      <button class="bg-blue-500 text-white rounded p-1 ml-2">검색</button>
-    </div>
-    <div class="col-md-4 text-end" v-if="!isLogin">
-      <button type="button" class="btn btn-outline-primary me-2" @click="login">Login</button>
-      <button type="button" class="btn btn-primary">Sign-up</button>
-    </div>
-    <div class="col-md-4 text-end" v-else>
-      <button type="button" class="btn btn-primary me-2">MyPage</button>
-      <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
+        <button class="bg-blue-500 text-white rounded p-1 ml-2" @click.prevent="search">검색</button>
+      </form>
     </div>
 
+    <div class="md:flex-1 text-end">
+      <div v-if="!isLogin">
+        <button type="button" class="btn btn-outline-primary me-2" @click="login">Login</button>
+        <button type="button" class="btn btn-primary">Sign-up</button>
+      </div>
+      <div v-else>
+        <button type="button" class="btn btn-primary me-2">MyPage</button>
+        <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -54,11 +42,15 @@ import { selectTagByInput } from "../api/tag";
 import { useUserStore } from "../stores/user";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
+import Tagify from '@yaireo/tagify';
+
 const router = useRouter();
 
-const input = ref(null);
-const isLoggedIn = true;
+const tagInput = ref(null);
+const inputValue = ref(""); // 입력값을 저장할 반응형 참조
+
 const tags = ref([]);
+const placeholder = ref("태그 검색");
 
 const userStore = useUserStore()
 const { isLogin } = storeToRefs(userStore);
@@ -78,21 +70,40 @@ const checkLoginStatus = () => {
 
 onMounted(() => {
   checkLoginStatus()
-})
+  const tagify = new Tagify(tagInput.value, {
+    whitelist: tags.value, // 초기 화이트리스트 설정
+    dropdown: {
+      maxItems: 6,
+      classname: "tags-look",
+      enabled: 0,
+      closeOnSelect: false
+    }
+  });
 
-const handleInput = async (event) => {
-  const currentValue = event.target.value;
-  tags.value = await selectTagByInput(currentValue);
-};
+  // Tagify의 input 이벤트 리스너 설정
+  tagify.on('input', async e => {
+    inputValue.value = e.detail.value; // 입력값 업데이트
+    tags.value = await selectTagByInput(inputValue.value); // API 호출을 통해 태그 데이터 가져오기
+    tagify.settings.whitelist = tags.value.map(tag => tag.name); // 화이트리스트 업데이트
+    tagify.dropdown.show.call(tagify, inputValue.value); // 드롭다운 갱신
+    console.log("현재 입력값:", inputValue.value);
+    console.log("tags.value : ", tags.value);
+    tags.value = []
+  });
+});
 
-const selectTag = (tag) => {
-  input.value = tag.name; // 선택된 태그를 입력 필드에 설정
-  tags.value = []; // 드롭다운 목록을 비움
+const handleInput = async (input) => {
+  tags.value = await selectTagByInput(input);
+  console.log("tags.value : ", tags.value)
 };
 
 const login = () => {
   router.push("/login");
 };
+
+const search = () => {
+  console.log(tagInput.value)
+}
 </script>
 
 <style>
