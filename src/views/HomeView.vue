@@ -13,7 +13,11 @@
 import PinItemList from "@/components/PinItemList.vue";
 
 import { ref, onMounted } from "vue";
-import { getPinByPage } from "@/api/pin";
+
+import { getPinByPage } from "@/api/pin.js";
+import PinDetail from "@/components/PinDetail.vue";
+import PinItem from "@/components/PinItem.vue";
+
 const items = ref([]);
 const page = ref(1);
 const limit = 30;

@@ -34,7 +34,7 @@ import PhotoDisplay from "./detail/PhotoDisplay.vue";
 import MapDisplay from "./detail/MapDisplay.vue";
 import DescriptionBox from "./detail/DescriptionBox.vue";
 import CommentBox from "./detail/CommentBox.vue";
-import { getPinDetailById } from "../api/pin";
+import { getPinDetailById } from "../api/pin.js";
 
 const item = ref({});
 const route = useRoute();

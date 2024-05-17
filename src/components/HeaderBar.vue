@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-primary">Sign-up</button>
       </div>
       <div v-else>
-        <button type="button" class="btn btn-primary me-2">MyPage</button>
+        <button type="button" class="btn btn-primary me-2" @click="mypage">MyPage</button>
         <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
       </div>
     </div>
@@ -41,9 +41,12 @@ const inputValue = ref("");
 const tags = ref([]);
 const selectedTags = ref([]);
 const placeholder = ref("태그 검색");
-const isLogin = ref(false);
 
 
+
+const userStore = useUserStore()
+const { isLogin } = storeToRefs(userStore);
+const { userLogout } = userStore
 
 const checkLoginStatus = () => {
   const token = sessionStorage.getItem('accessToken');
@@ -51,7 +54,7 @@ const checkLoginStatus = () => {
 };
 
 const logout = async () => {
-  sessionStorage.removeItem('accessToken');
+  await userLogout();
   isLogin.value = false;
   router.push('/');
 };
@@ -96,6 +99,10 @@ const handleInput = async (input) => {
 const login = () => {
   router.push("/login");
 };
+
+const mypage = () => {
+  router.push('/mypage');
+}
 </script>
 
 <style>
