@@ -40,7 +40,7 @@
       <button type="button" class="btn btn-primary">Sign-up</button>
     </div>
     <div class="col-md-4 text-end" v-else>
-      <button type="button" class="btn btn-primary me-2">MyPage</button>
+      <button type="button" class="btn btn-primary me-2" @click="mypage">MyPage</button>
       <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
     </div>
 
@@ -63,10 +63,7 @@ const tags = ref([]);
 const userStore = useUserStore()
 const { isLogin } = storeToRefs(userStore);
 const { userLogout } = userStore
-const logout = async () => {
-  await userLogout();
-  router.push('/');
-};
+
 const checkLoginStatus = () => {
   const token = sessionStorage.getItem('accessToken');
   if (token) {
@@ -93,6 +90,15 @@ const selectTag = (tag) => {
 const login = () => {
   router.push("/login");
 };
+
+const logout = async () => {
+  await userLogout();
+  router.push('/');
+};
+
+const mypage = () => {
+  router.push('/mypage');
+}
 </script>
 
 <style>

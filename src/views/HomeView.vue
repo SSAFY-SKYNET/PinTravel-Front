@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-import { getPinByPage } from "@/api/pin";
+import { getPinByPage } from "@/api/pin.js";
 import PinDetail from "@/components/PinDetail.vue";
 import PinItem from "@/components/PinItem.vue";
 
