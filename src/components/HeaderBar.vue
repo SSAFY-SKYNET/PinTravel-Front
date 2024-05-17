@@ -35,17 +35,15 @@
       </div>
       <button class="bg-blue-500 text-white rounded p-1 ml-2">검색</button>
     </div>
-    <div class="md:flex-1 text-right">
-      <button v-if="!isLoggedIn" @click="login" class="bg-blue-500 text-white rounded p-1">
-        로그인
-      </button>
-      <div v-else>
-        <button @click="logout" class="bg-red-500 text-white rounded p-1">
-          로그아웃
-        </button>
-        <button class="bg-green-500 text-white rounded p-1">프로필</button>
-      </div>
+    <div class="col-md-4 text-end" v-if="!isLogin">
+      <button type="button" class="btn btn-outline-primary me-2" @click="login">Login</button>
+      <button type="button" class="btn btn-primary">Sign-up</button>
     </div>
+    <div class="col-md-4 text-end" v-else>
+      <button type="button" class="btn btn-primary me-2">MyPage</button>
+      <button type="button" class="btn btn-outline-primary " @click="logout">Logout</button>
+    </div>
+
   </header>
 </template>
 
@@ -53,13 +51,34 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { selectTagByInput } from "../api/tag";
-
+import { useUserStore } from "../stores/user";
+import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 const router = useRouter();
 
 const input = ref(null);
 const isLoggedIn = true;
 const tags = ref([]);
 
+const userStore = useUserStore()
+const { isLogin } = storeToRefs(userStore);
+const { userLogout } = userStore
+const logout = async () => {
+  await userLogout();
+  router.push('/');
+};
+const checkLoginStatus = () => {
+  const token = sessionStorage.getItem('accessToken');
+  if (token) {
+    userStore.isLogin = true;
+  } else {
+    userStore.isLogin = false;
+  }
+};
+
+onMounted(() => {
+  checkLoginStatus()
+})
 
 const handleInput = async (event) => {
   const currentValue = event.target.value;
