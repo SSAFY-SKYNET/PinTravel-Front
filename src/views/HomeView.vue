@@ -15,10 +15,7 @@ import PinItemList from "@/components/PinItemList.vue";
 import { ref, onMounted } from "vue";
 
 import { getPinByPage } from "@/api/pin.js";
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 
 const items = ref([]);
 const page = ref(1);
