@@ -3,7 +3,7 @@ import {useRoute} from "vue-router";
 import {defineStore} from "pinia";
 import {jwtDecode} from "jwt-decode";
 
-import {userConfirm, findById, tokenRegeneration, logout, userSignup} from "@/api/user.js"
+import {userConfirm, findById, tokenRegeneration, logout, userSignup, userUpdate} from "@/api/user.js"
 import {httpStatusCode} from "@/util/http-status.js";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -13,6 +13,7 @@ export const useUserStore = defineStore("userStore", () => {
     const userInfo = ref(null)
     const isValidToken = ref(null)
     const isSignupError = ref(null);
+    const isModifyError = ref(null);
 
     const userLogin = async (loginUser) => {
         await userConfirm(
@@ -151,16 +152,37 @@ export const useUserStore = defineStore("userStore", () => {
         );
     };
 
+    const userModify = async (formData) => {
+        await userUpdate(
+            formData,
+            (response) => {
+                if (response.status === httpStatusCode.OK) {
+                    isModifyError.value = false;
+                    console.log("회원정보 수정 성공");
+                } else {
+                    isModifyError.value = true;
+                    console.log("회원정보 수정 실패");
+                }
+            },
+            (error) => {
+                isModifyError.value = true;
+                console.error(error);
+            }
+        )
+    }
+
     return {
         isLogin,
         isLoginError,
         userInfo,
         isValidToken,
         isSignupError,
+        isModifyError,
         userLogin,
         getUserInfo,
         tokenRegenerate,
         userLogout,
-        userSignUp
+        userSignUp,
+        userModify
     }
 })

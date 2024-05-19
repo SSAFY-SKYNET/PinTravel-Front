@@ -28,4 +28,9 @@ async function userSignup(formData, success, fail) {
     await local.post(`/user/signup`, formData).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, getUserInfo, userSignup };
+async function userUpdate(formData, success, fail) {
+    const accessToken = sessionStorage.getItem("accessToken");
+    local.defaults.headers["Authorization"] = accessToken;
+    await local.post(`/user/update`, formData).then(success).catch(fail);
+}
+export { userConfirm, findById, tokenRegeneration, logout, getUserInfo, userSignup, userUpdate };

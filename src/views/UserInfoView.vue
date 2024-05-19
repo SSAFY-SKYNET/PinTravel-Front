@@ -132,7 +132,7 @@ const submitForm = async () => {
   await userModify(formData);
 
   if (!isModifyError.value) {
-    router.push("/mypage");
+    router.go("/mypage");
   }
 };
 
