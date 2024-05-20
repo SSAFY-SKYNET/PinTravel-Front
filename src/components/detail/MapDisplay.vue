@@ -1,6 +1,12 @@
 <template>
   <div>
-    <KakaoMap :lat="latitude" :lng="longitude" :draggable="true" width="100%" height="100%">
+    <KakaoMap
+      :lat="latitude"
+      :lng="longitude"
+      :draggable="true"
+      width="100%"
+      height="100%"
+    >
       <KakaoMapMarker :lat="latitude" :lng="longitude"></KakaoMapMarker>
     </KakaoMap>
   </div>
@@ -9,15 +15,16 @@
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import { defineProps } from "vue";
 
-defineProps({
+const props = defineProps({
   latitude: {
     type: Number,
-    required: true,
+    default: 37.5665, // 서울의 위도
+    required: false,
   },
   longitude: {
     type: Number,
-    required: true,
+    default: 126.978, // 서울의 경도
+    required: false,
   },
 });
-
 </script>
