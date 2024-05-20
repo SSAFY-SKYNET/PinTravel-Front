@@ -1,41 +1,47 @@
 <template>
   <div class="flex flex-col place-items-center">
-    <div class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-auto overflow-auto">
-      <div v-if="userInfo" class="flex flex-row items-center p-2">
-        <div v-if="!isModify" class="flex flex-row place-items-center">
-          <div class="mr-5">
-            <UserImgDisplay class="mb-2 w-[200px] h-[200px]" :imageUrl="userInfo.profilePicture"/>
-          </div>
-          <div class="flex flex-col">
-            <p class="text-center">{{ userInfo.username }}</p>
-            <p class="text-center">{{ userInfo.email }}</p>
-            <p class="text-center">팔로워</p>
-            <p class="text-center">팔로잉</p>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded"
+    <div class="container flex flex-col bg-white p-6 rounded-lg shadow-lg relative m-4 h-auto w-auto overflow-auto">
+      <div v-if="userInfo" class="flex flex-col gap-6">
+        <div v-if="!isModify" class="flex items-center gap-6">
+          <UserImgDisplay class="w-100 h-100 rounded-full" :imageUrl="userInfo.profilePicture"/>
+          <div class="text-left">
+            <p class="text-2xl font-medium">{{ userInfo.username }}</p>
+            <p class="text-sm text-gray-500">{{ userInfo.email }}</p>
+<!--
+            <div class="mt-2 flex items-center gap-4">
+              <div>
+                <p class="font-medium">팔로워</p>
+                <p class="text-sm text-gray-500">{{ userInfo.followers }}</p>
+              </div>
+              <div>
+                <p class="font-medium">팔로잉</p>
+                <p class="text-sm text-gray-500">{{ userInfo.following }}</p>
+              </div>
+            </div>
+-->
+            <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
                     @click="isModify = !isModify">정보수정
             </button>
-            <!--<button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded ml-1">회원탈퇴</button>-->
-
           </div>
         </div>
         <div v-else>
-          <form action="" class="flex flex-row place-content-center">
-            <div class="mr-5 place-content-center relative">
+          <form action="" class="flex items-center gap-6">
+            <div class="relative">
               <img :src="modify.profilePicture || userInfo.profilePicture"
-                   class="mb-2 w-[200px] h-[200px] opacity-50 rounded-full"
+                   class="w-100 h-100 opacity-50 rounded-full"
                    alt="Profile Picture">
               <input type="file"
                      class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
                      @change="handleFileChange">
             </div>
-            <div class="flex flex-col place-content-center">
-              <input type="text" v-model="modify.username">
-              <input placeholder="새 비밀번호를 입력하세요" type="password" v-model="modify.password"/>
-              <div class="flex flex-row mt-5">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded"
+            <div class="flex flex-col gap-2 w-full max-w-xs">
+              <input type="text" v-model="modify.username" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="사용자 이름">
+              <input placeholder="새 비밀번호를 입력하세요" type="password" v-model="modify.password" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              <div class="flex justify-start gap-2 mt-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
                         @click.prevent="submitForm">정보수정
                 </button>
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded ml-1"
+                <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
                         @click="isModify = !isModify">취소
                 </button>
               </div>

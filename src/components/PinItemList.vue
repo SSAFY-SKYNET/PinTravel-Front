@@ -7,16 +7,21 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import PinItem from '@/components/PinItem.vue'
 
 defineProps({
-    items: {
-        type: Array,
-        required: true,
-    }
+  items: {
+    type: Array,
+    required: true,
+  }
 })
 
+const emit = defineEmits(['toggle-pin'])
+
+const togglePin = (item) => {
+  emit('toggle-pin', item)
+}
 </script>
 
 <style scoped>
