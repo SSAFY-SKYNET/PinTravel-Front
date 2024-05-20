@@ -26,13 +26,13 @@
         v-show="!loading"
     />
     <div
-        class="absolute inset-0 bg-black/50 group-hover:opacity-100 opacity-0 transition-opacity flex items-center justify-center z-20"
+        class="absolute inset-0 bg-black/50 group-hover:opacity-100 opacity-0 transition-opacity flex items-center justify-center"
     >
       <div class="flex items-center gap-2 text-white">
         <button
             aria-label="Toggle pin"
             class="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-            @click.stop="togglePin"
+            @click.stop.prevent="togglePin"
         >
           <svg
               :class="{ 'fill-current text-red-500': item.isPinned }"
@@ -56,19 +56,31 @@
 
 <script setup>
 import {defineProps, defineEmits, ref} from "vue";
+import {useRouter} from 'vue-router';
 
+const router = useRouter();
 const props = defineProps({
   item: Object,
 });
 
-const emit = defineEmits(["click", "toggle-pin"]);
+const emit = defineEmits(["click"]);
 const loading = ref(true);
 
 const handleClick = () => {
   emit("click", props.item);
 };
 
-const togglePin = () => {
-  emit("toggle-pin", props.item);
+const togglePin = (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  const token = sessionStorage.getItem('accessToken');
+  if (!token) {
+    router.push('/login');
+  } else {
+    router.push({
+      path: '/board/create',
+      query: {item: JSON.stringify(props.item)}
+    });
+  }
 };
 </script>

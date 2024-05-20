@@ -20,4 +20,20 @@ const getBoardDetailById = async (id) => {
     }
 };
 
-export { getBoardByUserId, getBoardDetailById };
+const createBoard = async (formData, token) => {
+    try {
+        console.log(formData);
+        const response = await axios.post(`${API_URL}/board`, formData, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("보드 생성 오류:", error);
+        throw error;
+    }
+};
+
+export { getBoardByUserId, getBoardDetailById, createBoard };
