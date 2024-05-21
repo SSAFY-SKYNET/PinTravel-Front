@@ -91,6 +91,7 @@
           Edit Board
         </button>
         <button
+            @click="deleteButton"
             class="px-4 py-2 border border-red-500 rounded-md text-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-200"
         >
           Delete Board
@@ -98,7 +99,7 @@
       </div>
       <div ref="scrollContainer" class="h-[calc(100vh-200px)] overflow-y-auto">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          <PinItemList :items="items"/>
+          <PinItemList :items="items" :board-id="route.params.id"/>
           <div ref="observerElement" style="height: 1px"></div>
         </div>
       </div>
@@ -109,10 +110,13 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
-import {getBoardDetailById, updateBoard} from "@/api/board.js";
+import {getBoardDetailById, updateBoard, deleteBoard} from "@/api/board.js";
 import PinItemList from "@/components/PinItemList.vue";
 import {getPinByBoardAndPage} from "@/api/pin.js";
 import MapDisplay from "@/components/detail/MapDisplay.vue";
+import iziToast from "izitoast";
+import router from "@/router/index.js";
+import {deleteLike} from "@/api/like.js";
 
 const item = ref(null);
 const route = useRoute();
@@ -167,7 +171,7 @@ const submitForm = async () => {
       private: modifiedItem.value.private,
     };
     await updateBoard(route.params.id, boardData);
-    item.value = { ...modifiedItem.value };
+    item.value = {...modifiedItem.value};
     isModify.value = false;
     modifiedItem.value = {};
   } catch (error) {
@@ -192,6 +196,35 @@ onMounted(() => {
   );
   observer.observe(observerElement.value);
 });
+
+const deleteButton = () => {
+  iziToast.question({
+    timeout: 20000,
+    close: false,
+    overlayClose: true,
+    overlay: true,
+    color: 'red',
+    displayMode: 'once',
+    id: 'question',
+    zindex: 999,
+    title: 'Hey',
+    message: '정말로 이 게시판을 삭제하시겠습니까?',
+    position: 'center',
+    buttons: [
+      ['<button><b>DELETE</b></button>', async function (instance, toast) {
+        instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+        await handleDeleteBoard();
+      }, true],
+      ['<button>Cancel</button>', function (instance, toast) {
+        instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+      }]
+    ]
+  });
+}
+
+const handleDeleteBoard = async () => {
+  await deleteBoard(route.params.id);
+};
 </script>
 
 <style scoped></style>

@@ -1,4 +1,6 @@
 import axios from "axios";
+import iziToast from "izitoast";
+import router from "@/router/index.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -67,4 +69,30 @@ const updateBoard = async (boardId, boardData) => {
     }
 };
 
-export {getBoardByUserId, getBoardListByUserId, getBoardDetailById, createBoard, updateBoard};
+const deleteBoard = async (boardId) => {
+    try {
+        const token = sessionStorage.getItem("accessToken");
+        await axios.put(`${API_URL}/board/delete/${boardId}`, {}, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token,
+            },
+        });
+        // 삭제 성공 후 처리할 로직 추가
+        iziToast.success({
+            title: 'Success',
+            message: '게시판이 성공적으로 삭제되었습니다.',
+            position: 'topRight'
+        });
+        router.push({path: `/mypage`, query: {activeTab: 'board'}});
+    } catch (error) {
+        console.error("게시판 삭제 오류:", error);
+        iziToast.error({
+            title: 'Error',
+            message: '게시판 삭제에 실패했습니다.',
+            position: 'topRight'
+        });
+    }
+};
+
+export {getBoardByUserId, getBoardListByUserId, getBoardDetailById, createBoard, updateBoard, deleteBoard};

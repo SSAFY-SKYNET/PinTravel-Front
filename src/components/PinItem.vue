@@ -29,10 +29,10 @@
         class="absolute inset-0 bg-black/50 group-hover:opacity-100 opacity-0 transition-opacity flex items-center justify-center"
     >
       <div class="flex items-center gap-2 text-white">
-        <button
-            aria-label="Toggle pin"
-            class="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-            @click.stop.prevent="togglePin"
+        <button v-if="!boardId"
+                aria-label="Like pin"
+                class="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                @click.stop.prevent="likePin"
         >
           <svg
               :class="{ 'fill-current text-red-500': item.isPinned }"
@@ -49,6 +49,25 @@
                 d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
           </svg>
         </button>
+        <button v-else
+                aria-label="Delete pin"
+                class="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                @click.stop.prevent="deletePin"
+        >
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-6 h-6"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -58,20 +77,44 @@
 import {defineProps, defineEmits, ref} from "vue";
 import {useRouter} from 'vue-router';
 import {Notyf} from "notyf";
+import iziToast from "izitoast";
+import {deletePinBoard} from "@/api/pinBoard.js";
+import {deleteLike} from "@/api/like.js";
 
 const router = useRouter();
 const props = defineProps({
   item: Object,
+  boardId: [Number, null], // Allow boardId to be either null or an integer
 });
 
 const emit = defineEmits(["click"]);
 const loading = ref(true);
 
-const handleClick = () => {
+const handleClick = (event) => {
+  event.stopPropagation();
   emit("click", props.item);
 };
 
-const togglePin = (event) => {
+const likePin = (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  const token = sessionStorage.getItem('accessToken');
+  if (!token) {
+    iziToast.warning({
+      title: 'Caution',
+      timeout: 5000,
+      message: '좋아요는 로그인 후 이용해주세요.',
+    });
+    router.push('/login');
+  } else {
+    router.push({
+      name: 'board-create',
+      params: {id: props.item.pinId},
+    });
+  }
+};
+
+const deletePin = (event) => {
   event.stopPropagation();
   event.preventDefault();
   const token = sessionStorage.getItem('accessToken');
@@ -80,12 +123,35 @@ const togglePin = (event) => {
     notyf.error("login plz");
     router.push('/login');
   } else {
-    const notyf = new Notyf();
-    // notyf.error("보드가 없어요~");
-    router.push({
-      name: 'board-create',
-      params: {id: props.item.pinId},
+    iziToast.question({
+      timeout: 20000,
+      close: false,
+      overlayClose: true,
+      overlay: true,
+      color: 'red',
+      displayMode: 'once',
+      id: 'question',
+      zindex: 999,
+      title: 'Hey',
+      message: '정말로 보드에서 핀을 삭제하시겠습니까?',
+      position: 'center',
+      buttons: [
+        ['<button><b>DELETE</b></button>', async function (instance, toast) {
+          instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+          await handleDeletePin();
+        }, true],
+        ['<button>Cancel</button>', function (instance, toast) {
+          instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+        }]
+      ]
     });
   }
+}
+
+const handleDeletePin = async () => {
+  const token = sessionStorage.getItem('accessToken');
+
+  await deletePinBoard(props.item.pinId, props.boardId, token);
+  await deleteLike(props.item.pinId);
 };
 </script>

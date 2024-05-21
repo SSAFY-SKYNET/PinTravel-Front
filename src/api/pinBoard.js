@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/router/index.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -19,4 +20,17 @@ const addPinBoard = async (pinId, boardId, token) => {
     }
 };
 
-export {addPinBoard};
+const deletePinBoard = async (pinId, boardId, token) => {
+    try {
+        await axios.delete(`${API_URL}/pinboards/${pinId}/${boardId}`, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        router.push({path: `/mypage`, query: {activeTab: 'board'}});
+    } catch (error) {
+        console.error("핀-보드 삭제 오류:", error);
+        throw error;
+    }
+}
+export {addPinBoard, deletePinBoard};

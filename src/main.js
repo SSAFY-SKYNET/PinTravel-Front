@@ -1,15 +1,16 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
+import {createApp} from "vue";
+import {createPinia} from "pinia";
 import App from "./App.vue";
 
 import router from "./router";
 import "./assets/index.css";
 
-import { useKakao } from "vue3-kakao-maps";
+import {useKakao} from "vue3-kakao-maps";
 import "@yaireo/tagify/dist/tagify.css";
 import "notyf/notyf.min.css"; // Notyf 스타일 시트
 import "exifr";
 import "heic2any";
+import "izitoast/dist/css/iziToast.css";
 import VueDaumPostcode from "vue-daum-postcode";
 
 const app = createApp(App);

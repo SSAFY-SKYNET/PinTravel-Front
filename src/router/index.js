@@ -11,6 +11,7 @@ import TestView from "@/views/TestView.vue";
 import {Notyf} from "notyf";
 import "notyf/notyf.min.css";
 import BoardCreate from "@/components/board/BoardCreate.vue"; // for React, Vue and Svelte
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [

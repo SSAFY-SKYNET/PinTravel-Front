@@ -79,6 +79,9 @@ import {createBoard} from "@/api/board.js";
 import {addPinBoard} from "@/api/pinBoard.js";
 import {getBoardListByUserId} from "@/api/board.js";
 import {getPinDetailById} from "@/api/pin.js";
+import router from "@/router/index.js";
+import iziToast from "izitoast";
+import {addLike} from "@/api/like.js";
 
 const props = defineProps({
   id: {
@@ -132,15 +135,34 @@ const submitForm = async () => {
 
       const boardId = await createBoard(formData, token);
       await addPinBoard(item.value.pinId, boardId, token);
-      alert("보드가 성공적으로 생성되었고, 핀이 추가되었습니다.");
+      iziToast.success({
+        title: "성공",
+        message: "보드가 성공적으로 생성되었고, 핀이 추가되었습니다.",
+        position: "topRight",
+        timeout: 3000
+      });
+      await addLike(item.value.pinId, token)
+      router.push({path: `/mypage`, query: {activeTab: 'board'}});
     } else {
       await addPinBoard(item.value.pinId, selectedBoard.value, token);
-      alert("핀이 성공적으로 보드에 추가되었습니다.");
+      iziToast.success({
+        title: "성공",
+        message: "핀이 성공적으로 보드에 추가되었습니다.",
+        position: "topRight",
+        timeout: 3000
+      });
+      await addLike(item.value.pinId, token)
+      router.push({path: `/mypage`, query: {activeTab: 'board'}});
     }
-    // 추가적인 동작 수행 (예: 생성된 보드 페이지로 이동)
   } catch (error) {
     console.error("오류 발생:", error);
-    alert("보드 생성 또는 핀 추가 중 오류가 발생했습니다.");
+    iziToast.error({
+      title: "실패",
+      message: "보드 생성 또는 핀 추가 중 오류가 발생했습니다.",
+      position: "topRight",
+      timeout: 3000
+    });
+    router.push({path: `/`});
   }
 };
 </script>
