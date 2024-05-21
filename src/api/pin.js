@@ -21,8 +21,9 @@ const getPinDetailById = async (id) => {
   }
 };
 
-const selectPinByMultiTagAndPage = async (tags, page = 10, limit = 30) => {
+const selectPinByMultiTagAndPage = async (tags, page = 1, limit = 30) => {
   console.log("selectPinByMultiTagAndPage", tags);
+  console.log(`${API_URL}/pin/multi-tag`, tags);
   try {
     const response = await axios.post(`${API_URL}/pin/multi-tag`, tags, {
       headers: {
@@ -84,6 +85,13 @@ const uploadImage = async (file) => {
     throw error;
   }
 };
+
+const getPinsByPinIdAndPage = async (pinId, page = 1, limit = 30) => {
+  const response = await axios.get(
+    `${API_URL}/pin/${pinId}/nearby/page?page=${page}&limit=${limit}`
+  );
+  return response.data;
+};
 export {
   getPinByPage,
   getPinDetailById,
@@ -91,4 +99,5 @@ export {
   selectPinByMultiTagAndPage,
   createPin,
   uploadImage,
+  getPinsByPinIdAndPage,
 };
