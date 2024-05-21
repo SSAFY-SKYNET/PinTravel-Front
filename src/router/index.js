@@ -10,7 +10,8 @@ import CreateView from "@/views/CreateView.vue";
 import TestView from "@/views/TestView.vue";
 import {Notyf} from "notyf";
 import "notyf/notyf.min.css";
-import BoardCreate from "@/components/board/BoardCreate.vue"; // for React, Vue and Svelte
+import BoardCreate from "@/components/board/BoardCreate.vue";
+import iziToast from "izitoast"; // for React, Vue and Svelte
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +53,19 @@ const router = createRouter({
             path: "/mypage",
             name: "mypage",
             component: UserInfoView,
+            beforeEnter: (to, from, next) => {
+                const accessToken = sessionStorage.getItem("accessToken");
+                if (!accessToken) {
+                    iziToast.warning({
+                        title: 'Caution',
+                        timeout: 5000,
+                        message: '마이페이지는 로그인 후 이용해주세요.',
+                    });
+                    next("/login");
+                } else {
+                    next();
+                }
+            },
         },
         {
             path: "/board/create/:id",
@@ -71,8 +85,11 @@ const router = createRouter({
             beforeEnter: (to, from, next) => {
                 const accessToken = sessionStorage.getItem("accessToken");
                 if (!accessToken) {
-                    const notyf = new Notyf();
-                    notyf.error("You must be logged in to access this page.");
+                    iziToast.warning({
+                        title: 'Caution',
+                        timeout: 5000,
+                        message: '핀 등록은 로그인 후 이용해주세요.',
+                    });
                     next("/login");
                 } else {
                     next();

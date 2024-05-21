@@ -1,7 +1,7 @@
 <template>
   <HeaderBar @search="handleSearch" />
   <RouterView :key="$route.path" :searchTags="searchTags" />
-  <FooterBar />
+  <FooterBar :handleScrollToTop="handleScrollToTop" />
 </template>
 
 <script setup>
@@ -10,6 +10,10 @@ import FooterBar from "./components/FooterBar.vue";
 import { ref } from "vue";
 
 const searchTags = ref([]);
+
+const handleScrollToTop = () => {
+  window.scrollTo(0,0);
+}
 
 const handleSearch = async (tags) => {
   searchTags.value = tags;
