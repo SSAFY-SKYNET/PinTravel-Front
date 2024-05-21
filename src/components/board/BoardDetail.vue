@@ -16,17 +16,83 @@
             :pins="items"
         />
       </div>
-      <div v-if="item" class="mb-6 md:mb-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">{{ item.title }}</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-base md:text-lg">{{ item.description }}</p>
+      <div v-if="item && !isModify" class="mb-6 md:mb-8 flex justify-between items-center">
+        <h2 class="text-2xl md:text-3xl font-bold">{{ item.title }}</h2>
+        <svg
+            v-if="item.private"
+            class="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
       </div>
-      <div class="flex justify-end mb-6 md:mb-8">
+      <div v-else-if="isModify" class="mb-6 md:mb-8">
+        <form @submit.prevent="submitForm">
+          <div class="mb-4">
+            <label for="title" class="block font-medium text-gray-700">Title</label>
+            <input
+                type="text"
+                id="title"
+                v-model="modifiedItem.title"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </div>
+          <div class="mb-4">
+            <label for="description" class="block font-medium text-gray-700">Description</label>
+            <textarea
+                id="description"
+                v-model="modifiedItem.description"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            ></textarea>
+          </div>
+          <div class="mb-4">
+            <label for="private" class="inline-flex items-center">
+              <input
+                  type="checkbox"
+                  id="private"
+                  v-model="modifiedItem.private"
+                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <span class="ml-2 text-gray-700">Private</span>
+            </label>
+          </div>
+          <div class="flex justify-end">
+            <button
+                type="submit"
+                class="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Save
+            </button>
+            <button
+                type="button"
+                @click="cancelModify"
+                class="ml-4 px-4 py-2 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+      <p v-if="item && !isModify" class="text-gray-500 dark:text-gray-400 text-base md:text-lg mb-6 md:mb-8">{{
+          item.description
+        }}</p>
+      <div v-if="!isModify" class="flex justify-end mb-6 md:mb-8">
         <button
-            class="mr-4 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+            @click="startModify"
+            class="mr-4 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        >
           Edit Board
         </button>
         <button
-            class="px-4 py-2 border border-red-500 rounded-md text-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-200">
+            class="px-4 py-2 border border-red-500 rounded-md text-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-200"
+        >
           Delete Board
         </button>
       </div>
@@ -43,7 +109,7 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
-import {getBoardDetailById} from "@/api/board.js";
+import {getBoardDetailById, updateBoard} from "@/api/board.js";
 import PinItemList from "@/components/PinItemList.vue";
 import {getPinByBoardAndPage} from "@/api/pin.js";
 import MapDisplay from "@/components/detail/MapDisplay.vue";
@@ -58,6 +124,9 @@ const scrollContainer = ref(null);
 const observerElement = ref(null);
 
 let observer;
+
+const isModify = ref(false);
+const modifiedItem = ref({});
 
 const loadData = async () => {
   if (route.params.id) {
@@ -77,6 +146,32 @@ const loadItems = async () => {
     page.value++;
   } catch (error) {
     console.error("Failed to fetch pins:", error);
+  }
+};
+
+const startModify = () => {
+  isModify.value = true;
+  modifiedItem.value = {...item.value};
+};
+
+const cancelModify = () => {
+  isModify.value = false;
+  modifiedItem.value = {};
+};
+
+const submitForm = async () => {
+  try {
+    const boardData = {
+      title: modifiedItem.value.title,
+      description: modifiedItem.value.description,
+      private: modifiedItem.value.private,
+    };
+    await updateBoard(route.params.id, boardData);
+    item.value = { ...modifiedItem.value };
+    isModify.value = false;
+    modifiedItem.value = {};
+  } catch (error) {
+    console.error("Failed to update board:", error);
   }
 };
 

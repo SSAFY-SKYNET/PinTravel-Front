@@ -53,16 +53,10 @@ const router = createRouter({
             component: UserInfoView,
         },
         {
-            path: "/board/create",
+            path: "/board/create/:id",
             name: "board-create",
             component: BoardCreate,
-            props: (route) => ({
-                item: route.params.item,
-            }),
-            afterEnter: (to, from, next) => {
-                const notyf = new Notyf();
-                notyf.success("login success");
-            },
+            props: true,
         },
         {
             path: "/board/:id",

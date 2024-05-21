@@ -10,6 +10,21 @@ const getBoardByUserId = async (userId, page = 1, limit = 30) => {
     return response.data;
 };
 
+const getBoardListByUserId = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/board/list`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("보드 생성 오류:", error);
+        throw error;
+    }
+};
+
 const getBoardDetailById = async (id) => {
     try {
         const response = await axios.get(`${API_URL}/board/${id}`);
@@ -36,4 +51,20 @@ const createBoard = async (formData, token) => {
     }
 };
 
-export { getBoardByUserId, getBoardDetailById, createBoard };
+const updateBoard = async (boardId, boardData) => {
+    try {
+        const token = sessionStorage.getItem("accessToken");
+        const response = await axios.put(`${API_URL}/board/${boardId}`, boardData, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("보드 수정 오류:", error);
+        throw error;
+    }
+};
+
+export {getBoardByUserId, getBoardListByUserId, getBoardDetailById, createBoard, updateBoard};

@@ -57,6 +57,7 @@
 <script setup>
 import {defineProps, defineEmits, ref} from "vue";
 import {useRouter} from 'vue-router';
+import {Notyf} from "notyf";
 
 const router = useRouter();
 const props = defineProps({
@@ -75,11 +76,15 @@ const togglePin = (event) => {
   event.preventDefault();
   const token = sessionStorage.getItem('accessToken');
   if (!token) {
+    const notyf = new Notyf();
+    notyf.error("login plz");
     router.push('/login');
   } else {
+    const notyf = new Notyf();
+    // notyf.error("보드가 없어요~");
     router.push({
-      path: '/board/create',
-      query: {item: JSON.stringify(props.item)}
+      name: 'board-create',
+      params: {id: props.item.pinId},
     });
   }
 };

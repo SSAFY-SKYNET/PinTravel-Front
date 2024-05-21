@@ -107,6 +107,7 @@ import {getBoardByUserId} from "@/api/board.js"
 import BoardItem from "@/components/board/BoardItem.vue";
 import {getPinByUserId} from "@/api/pin.js";
 import PinItem from "@/components/PinItem.vue";
+import heic2any from "heic2any";
 
 const userStore = useUserStore()
 const {userInfo, isModifyError} = storeToRefs(userStore);
@@ -129,7 +130,23 @@ const handleFileChange = (event) => {
   }
 };
 
+const getHeicToJpeg = async (file) => {
+  if (file.type === "" || file.type === "image/heic") {
+    const jpegBlob = await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+    });
+    const name = file.name.split(".")[0] + ".jpeg";
+    return new File([jpegBlob], name);
+  }
+  return file;
+};
+
 const submitForm = async () => {
+  let photo = modify.value.profilePicture;
+  photo = await getHeicToJpeg(photo);
+  console.log("이미지 등록 중...");
+
   const formData = new FormData();
   formData.append('username', modify.value.username);
   formData.append('password', modify.value.password);
