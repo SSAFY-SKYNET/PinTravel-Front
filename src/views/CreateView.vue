@@ -3,62 +3,62 @@
     <form @submit.prevent="submitForm" class="space-y-4">
       <div>
         <label for="photo" class="block text-sm font-medium text-gray-700"
-          >사진:</label
+        >사진:</label
         >
         <input
-          type="file"
-          id="photo"
-          ref="photoInput"
-          accept="image/*"
-          @change="previewImage"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            type="file"
+            id="photo"
+            ref="photoInput"
+            accept="image/*"
+            @change="previewImage"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
         <!-- 이미지 미리보기 -->
         <div v-if="imagePreview" class="mt-4">
           <img
-            :src="imagePreview"
-            alt="Photo Preview"
-            class="max-w-xs rounded-lg shadow-sm"
+              :src="imagePreview"
+              alt="Photo Preview"
+              class="max-w-xs rounded-lg shadow-sm"
           />
         </div>
       </div>
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700"
-          >제목:</label
+        >제목:</label
         >
         <input
-          type="text"
-          id="title"
-          v-model="title"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            type="text"
+            id="title"
+            v-model="title"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
       <div>
         <label for="address" class="block text-sm font-medium text-gray-700"
-          >주소:</label
+        >주소:</label
         >
         <input
-          type="text"
-          id="address"
-          v-model="address"
-          @click="showModal = true"
-          readonly
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            type="text"
+            id="address"
+            v-model="address"
+            @click="showModal = true"
+            readonly
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
         <div
-          v-if="showModal"
-          class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-          id="my-modal"
-          @click="closeModal"
+            v-if="showModal"
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+            id="my-modal"
+            @click="closeModal"
         >
           <div
-            class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
-            @click.stop
+              class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+              @click.stop
           >
             <!-- 이 div 태그에서의 클릭 이벤트가 상위로 전파되지 않도록 .stop 수식어 사용 -->
             <div class="mt-3 text-center">
               <div
-                class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100"
+                  class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100"
               >
                 <!-- 아이콘 또는 로고 -->
               </div>
@@ -67,15 +67,15 @@
               </h3>
               <div class="mt-2 px-7 py-3">
                 <VueDaumPostcode
-                  @complete="handleAddress"
-                  @close="showModal = false"
+                    @complete="handleAddress"
+                    @close="showModal = false"
                 />
               </div>
               <div class="items-center px-4 py-3">
                 <button
-                  id="ok-btn"
-                  @click="showModal = false"
-                  class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+                    id="ok-btn"
+                    @click="showModal = false"
+                    class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
                 >
                   완료
                 </button>
@@ -86,29 +86,29 @@
       </div>
       <div>
         <label for="description" class="block text-sm font-medium text-gray-700"
-          >설명:</label
+        >설명:</label
         >
         <textarea
-          id="description"
-          v-model="description"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            id="description"
+            v-model="description"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         ></textarea>
       </div>
       <div>
         <label for="tags" class="block text-sm font-medium text-gray-700"
-          >태그:</label
+        >태그:</label
         >
         <input
-          type="text"
-          id="tags"
-          v-model="tags"
-          placeholder="태그를 쉼표로 구분하세요"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            type="text"
+            id="tags"
+            v-model="tags"
+            placeholder="태그를 쉼표로 구분하세요"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
       <button
-        type="submit"
-        class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          type="submit"
+          class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
         제출
       </button>
@@ -117,13 +117,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { Notyf } from "notyf";
-import { useRouter } from "vue-router";
+import {ref} from "vue";
+import {Notyf} from "notyf";
+import {useRouter} from "vue-router";
 import heic2any from "heic2any";
 import exifr from "exifr";
-import { VueDaumPostcode } from "vue-daum-postcode";
-import { createPin, uploadImage } from "@/api/pin";
+import {VueDaumPostcode} from "vue-daum-postcode";
+import {createPin, uploadImage} from "@/api/pin";
+import iziToast from "izitoast";
 
 const notyf = new Notyf();
 const router = useRouter();
@@ -217,9 +218,22 @@ const uploadAndCreatePin = async (photo, pinDetails) => {
     };
     console.log("pinData", pinData);
     const response = await createPin(pinData, token);
-    console.log("핀 생성 성공", response);
+    iziToast.success({
+      title: "성공",
+      message: "핀이 성공적으로 추가되었습니다.",
+      position: "topRight",
+      timeout: 3000
+    });
+    router.push({path: `/mypage`, query: {activeTab: 'pin'}});
   } catch (error) {
     console.error("핀 생성 오류", error);
+    iziToast.error({
+      title: "실패",
+      message: "보드 생성 또는 핀 추가 중 오류가 발생했습니다.",
+      position: "topRight",
+      timeout: 3000
+    });
+    router.push({path: `/`});
   }
 };
 // 이미지 파일을 읽고 미리보기를 업데이트하는 함수
@@ -230,14 +244,14 @@ const previewImage = async () => {
 
   if (originalMetadata.GPSLongitude && originalMetadata.GPSLatitude) {
     latitude.value = parseFloat(
-      originalMetadata.GPSLatitude[0] +
+        originalMetadata.GPSLatitude[0] +
         "." +
         originalMetadata.GPSLatitude[1] +
         "" +
         originalMetadata.GPSLatitude[2].toString().replace(".", "")
     );
     longitude.value = parseFloat(
-      originalMetadata.GPSLongitude[0] +
+        originalMetadata.GPSLongitude[0] +
         "." +
         originalMetadata.GPSLongitude[1] +
         "" +

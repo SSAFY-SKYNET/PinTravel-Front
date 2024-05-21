@@ -18,9 +18,8 @@ const handleSearch = async (tags) => {
 </script>
 
 <style lang="css">
-body {
-  overflow-y: hidden;
-} /* 스크롤바의 폭 너비 */
+
+/* 스크롤바의 폭 너비 */
 .main::-webkit-scrollbar {
   width: 5px;
 }

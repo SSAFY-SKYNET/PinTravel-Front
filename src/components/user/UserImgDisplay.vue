@@ -14,5 +14,8 @@ const props = defineProps({
 </script>
 
 <style scoped>
-/* 추가적인 스타일링이 필요하면 여기에 작성 */
+div {
+  width: 200px; /* 원하는 너비 값으로 변경 */
+  height: auto; /* 비율 유지를 위해 auto로 설정 */
+}
 </style>

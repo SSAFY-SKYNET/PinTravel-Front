@@ -84,6 +84,15 @@ const uploadImage = async (file) => {
     throw error;
   }
 };
+
+const getPinByBoardAndPage = async (boardId, page = 1, limit = 30) => {
+  const response = await axios
+      .get(`${API_URL}/pin/board/${boardId}/page?page=${page}&limit=${limit}`)
+      .catch((err) => console.error(err));
+
+  return response.data;
+};
+
 export {
   getPinByPage,
   getPinDetailById,
@@ -91,4 +100,5 @@ export {
   selectPinByMultiTagAndPage,
   createPin,
   uploadImage,
+  getPinByBoardAndPage,
 };

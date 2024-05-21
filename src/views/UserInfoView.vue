@@ -1,42 +1,69 @@
 <template>
   <div class="flex flex-col place-items-center">
-    <div class="container flex flex-col bg-white p-4 rounded-lg shadow-lg relative m-4 h-auto w-auto overflow-auto">
-      <div v-if="userInfo" class="flex flex-row items-center p-2">
-        <div v-if="!isModify" class="flex flex-row place-items-center">
-          <div class="mr-5">
-            <UserImgDisplay class="mb-2 w-[200px] h-[200px]" :imageUrl="userInfo.profilePicture"/>
-          </div>
-          <div class="flex flex-col">
-            <p class="text-center">{{ userInfo.username }}</p>
-            <p class="text-center">{{ userInfo.email }}</p>
-            <p class="text-center">팔로워</p>
-            <p class="text-center">팔로잉</p>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded"
+    <div class="container flex flex-col bg-white p-6 rounded-lg shadow-lg relative m-4 h-auto w-auto overflow-auto">
+      <div v-if="userInfo" class="flex flex-col gap-6">
+        <div v-if="!isModify" class="flex items-center gap-6">
+          <UserImgDisplay class="w-100 h-100 rounded-full" :imageUrl="userInfo.profilePicture"/>
+          <div class="text-left">
+            <p class="text-2xl font-medium">{{ userInfo.username }}</p>
+            <p class="text-sm text-gray-500">{{ userInfo.email }}</p>
+            <!--
+                        <div class="mt-2 flex items-center gap-4">
+                          <div>
+                            <p class="font-medium">팔로워</p>
+                            <p class="text-sm text-gray-500">{{ userInfo.followers }}</p>
+                          </div>
+                          <div>
+                            <p class="font-medium">팔로잉</p>
+                            <p class="text-sm text-gray-500">{{ userInfo.following }}</p>
+                          </div>
+                        </div>
+            -->
+            <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
                     @click="isModify = !isModify">정보수정
             </button>
-            <!--<button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded ml-1">회원탈퇴</button>-->
-
           </div>
         </div>
         <div v-else>
-          <form action="" class="flex flex-row place-content-center">
-            <div class="mr-5 place-content-center relative">
-              <img :src="modify.profilePicture || userInfo.profilePicture"
-                   class="mb-2 w-[200px] h-[200px] opacity-50 rounded-full"
-                   alt="Profile Picture">
-              <input type="file"
-                     class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                     @change="handleFileChange">
+          <form @submit.prevent="submitForm" class="flex items-center gap-6">
+            <div class="relative">
+              <img
+                  :src="previewImage || userInfo.profilePicture"
+                  class="w-100 h-100 rounded-full"
+                  alt="Profile Picture"
+              />
+              <input
+                  type="file"
+                  class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                  @change="handleFileChange"
+              />
             </div>
-            <div class="flex flex-col place-content-center">
-              <input type="text" v-model="modify.username">
-              <input placeholder="새 비밀번호를 입력하세요" type="password" v-model="modify.password"/>
-              <div class="flex flex-row mt-5">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded"
-                        @click.prevent="submitForm">정보수정
+            <div class="flex flex-col gap-2 w-full max-w-xs">
+              <input
+                  type="text"
+                  v-model="modify.username"
+                  class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="사용자 이름"
+              />
+              <input
+                  placeholder="새 비밀번호를 입력하세요"
+                  type="password"
+                  v-model="modify.password"
+                  class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div class="flex justify-start gap-2 mt-4">
+                <button
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                >
+                  정보수정
                 </button>
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded ml-1"
-                        @click="isModify = !isModify">취소
+                <button
+                    type="button"
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+                    @click="cancelModify"
+                >
+                  취소
                 </button>
               </div>
             </div>
@@ -48,12 +75,12 @@
     <div class="flex justify-center space-x-4 my-4">
       <button class="px-4 py-2 rounded-lg"
               :class="{ 'bg-blue-500 text-white': activeTab === 'pin', 'bg-gray-200': activeTab !== 'pin' }"
-              @click="activeTab = 'pin'">
+              @click="setActiveTab('pin')">
         핀
       </button>
       <button class="px-4 py-2 rounded-lg"
               :class="{ 'bg-blue-500 text-white': activeTab === 'board', 'bg-gray-200': activeTab !== 'board' }"
-              @click="activeTab = 'board'">
+              @click="setActiveTab('board')">
         보드
       </button>
     </div>
@@ -93,20 +120,29 @@
 
 <script setup>
 import {onMounted, ref, nextTick} from 'vue';
-import router from "@/router/index.js";
 import {useUserStore} from "../stores/user";
 import {storeToRefs} from "pinia";
 import UserImgDisplay from "@/components/user/UserImgDisplay.vue";
 import {getBoardByUserId} from "@/api/board.js"
 import BoardItem from "@/components/board/BoardItem.vue";
-import {getPinByUserId} from "@/api/pin.js";
+import {getPinByUserId, uploadImage} from "@/api/pin.js";
 import PinItem from "@/components/PinItem.vue";
+import heic2any from "heic2any";
+import {useRoute, useRouter} from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
 
 const userStore = useUserStore()
-const {userInfo, isModifyError} = storeToRefs(userStore);
+const {userInfo} = storeToRefs(userStore);
 const {getUserInfo, userModify} = userStore
 
 const activeTab = ref('pin');
+
+const setActiveTab = (tab) => {
+  activeTab.value = tab;
+  router.push({query: {activeTab: tab}});
+};
 
 const isModify = ref(false)
 const modify = ref({
@@ -116,24 +152,88 @@ const modify = ref({
   profilePicture: null
 });
 
-const handleFileChange = (event) => {
+const getHeicToJpeg = async (file) => {
+  if (file.type === "" || file.type === "image/heic") {
+    const jpegBlob = await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+    });
+    const name = file.name.split(".")[0] + ".jpeg";
+    return new File([jpegBlob], name);
+  }
+  return file;
+};
+
+const previewImage = ref(null);
+
+const handleFileChange = async (event) => {
   const file = event.target.files[0];
   if (file) {
-    modify.value.profilePicture = URL.createObjectURL(file);
+    const convertedFile = await getHeicToJpeg(file);
+    modify.value.profilePicture = convertedFile;
+    previewImage.value = URL.createObjectURL(convertedFile);
   }
 };
 
 const submitForm = async () => {
-  const formData = new FormData();
-  formData.append('username', modify.value.username);
-  formData.append('password', modify.value.password);
-  formData.append('profilePicture', modify.value.profilePicture);
-
-  await userModify(formData);
-
-  if (!isModifyError.value) {
-    router.go("/mypage");
+  const token = sessionStorage.getItem("accessToken");
+  if (!token) {
+    console.error("접근 토큰이 없습니다.");
+    return;
   }
+
+  let errorMessage = "";
+  if (!modify.value.username.trim()) {
+    errorMessage += "사용자 이름, ";
+  }
+  if (errorMessage.length > 0) {
+    errorMessage = errorMessage.slice(0, -2) + " 필드를 채워주세요.";
+    alert(errorMessage);
+    return;
+  }
+
+  const imageUrl = await uploadImage(modify.value.profilePicture, token);
+  if (!imageUrl) {
+    console.error("이미지 업로드 실패");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("username", modify.value.username.trim());
+  if (modify.value.password.trim()) {
+    formData.append("password", modify.value.password.trim());
+  }
+  if (modify.value.profilePicture) {
+    formData.append("profilePicture", imageUrl);
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      console.error("접근 토큰이 없습니다.");
+      return;
+    }
+
+    await userModify(formData, token);
+    await initializeUserInfo();
+
+    alert("사용자 정보가 성공적으로 수정되었습니다.");
+    isModify.value = false;
+  } catch (error) {
+    console.error("사용자 정보 수정 오류", error);
+    alert("사용자 정보 수정 중 오류가 발생했습니다.");
+  }
+};
+
+const cancelModify = () => {
+  isModify.value = false;
+  modify.value = {
+    userId: "",
+    username: "",
+    password: "",
+    profilePicture: null,
+  };
+  previewImage.value = null;
 };
 
 // 새로고침 시 토큰 유효성 확인 및 userInfo 불러오기
@@ -188,6 +288,13 @@ const loadPins = async () => {
 onMounted(async () => {
   await initializeUserInfo();
 
+  const tab = route.query.activeTab;
+  if (tab === 'board') {
+    activeTab.value = 'board';
+  } else if (tab === 'pin') {
+    activeTab.value = 'pin'
+  }
+
   await nextTick(async () => {
     // Pin IntersectionObserver 설정
     pinObserver = new IntersectionObserver(
@@ -229,14 +336,15 @@ onMounted(async () => {
 
     // 초기 pin 목록 로드
     await loadPins();
-
-    // 초기 board 목록 로드
-    await getBoardList();
   });
 });
 </script>
 
 <style lang="css" scoped>
+body {
+  overflow-y: visible;
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
