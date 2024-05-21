@@ -26,6 +26,10 @@
             <button @click="goToSignUp">회원가입하기</button>
           </small>
         </form>
+        <!-- ouath-login -->
+        <div>
+          <a href="http://localhost/oauth2/authorization/google">Google로 로그인</a>
+        </div>
       </div>
     </div>
   </div>
