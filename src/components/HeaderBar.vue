@@ -7,8 +7,7 @@
     <div class="flex-grow flex justify-center items-center">
       <form class="flex">
         <div class="relative"> <!-- relative 위치 추가 -->
-          <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded p-1 w-full"
-                 @input="handleInput($event)"/>
+          <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded p-1 w-full" />
         </div>
         <button class="bg-blue-500 text-white rounded p-1 ml-2" @click.prevent="search">검색</button>
       </form>
@@ -28,12 +27,12 @@
 </template>
 
 <script setup>
-import {useRouter} from "vue-router";
-import {ref, onMounted} from "vue";
-import {selectTagByInput} from "../api/tag";
+import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { selectTagByInput } from "../api/tag";
 import Tagify from '@yaireo/tagify';
-import {useUserStore} from "@/stores/user.js";
-import {storeToRefs} from "pinia";
+import { useUserStore } from "@/stores/user.js";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 
@@ -46,8 +45,8 @@ const placeholder = ref("태그 검색");
 
 
 const userStore = useUserStore()
-const {isLogin} = storeToRefs(userStore);
-const {userLogout} = userStore
+const { isLogin } = storeToRefs(userStore);
+const { userLogout } = userStore
 
 const checkLoginStatus = () => {
   const token = sessionStorage.getItem('accessToken');
@@ -91,11 +90,11 @@ onMounted(() => {
 
 const search = () => {
   const queryTags = selectedTags.value.join(',');
-  router.push({name: 'search', query: {tags: queryTags}});
+  router.push({ name: 'search', query: { tags: queryTags } });
 };
 
 const handleInput = async (input) => {
-  tags.value = await selectTagByInput(input);
+  // tags.value = await selectTagByInput(input);
 };
 const login = () => {
   router.push("/login");
