@@ -130,24 +130,21 @@
 
       <!-- 5번째 메뉴 최상단으로 가는 버튼 -->
       <button
-          @click="handleScrollToTop"
+          @click="showSearchModal = true"
           data-tooltip-target="tooltip-top"
           type="button"
           class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
       >
-
         <svg
-            class="w-5 h-5 mt-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 -rotate-90"
+            class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             viewBox="0 0 20 20">
-          <path stroke-linecap="round" stroke-linejoin="round"
-                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
+          <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"/>
         </svg>
-
-
-        <span class="sr-only">Cursor</span>
+        <span class="sr-only">Search</span>
       </button>
       <div
           id="tooltip-top"
@@ -159,9 +156,18 @@
       </div>
     </div>
   </div>
+  <SearchModal :show-modal="showSearchModal" @close="showSearchModal = false" @search="handleSearch"/>
 </template>
 
 <script setup>
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
+import SearchModal from "@/components/modal/SearchModal.vue";
 
+const showSearchModal = ref(false);
+const router = useRouter();
 
+const handleSearch = (queryTags) => {
+  router.push({name: 'search', query: {tags: queryTags}});
+};
 </script>

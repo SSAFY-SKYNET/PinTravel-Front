@@ -97,11 +97,12 @@
           Delete Board
         </button>
       </div>
-      <div ref="scrollContainer" class="h-[calc(100vh-200px)] overflow-y-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          <PinItemList :items="items" :board-id="route.params.id"/>
-          <div ref="observerElement" style="height: 1px"></div>
-        </div>
+    </div>
+    <div ref="scrollContainer" class="h-[calc(100vh)] overflow-y-auto flex justify-center main">
+      <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-cols-max gap-4 mx-auto">
+        <PinItemList :items="items" :board-id="route.params.id"/>
+        <div ref="observerElement" style="height: 1px"></div>
       </div>
     </div>
   </section>
@@ -115,8 +116,6 @@ import PinItemList from "@/components/PinItemList.vue";
 import {getPinByBoardAndPage} from "@/api/pin.js";
 import MapDisplay from "@/components/detail/MapDisplay.vue";
 import iziToast from "izitoast";
-import router from "@/router/index.js";
-import {deleteLike} from "@/api/like.js";
 
 const item = ref(null);
 const route = useRoute();
