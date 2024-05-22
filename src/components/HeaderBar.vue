@@ -1,20 +1,19 @@
 <template>
   <header class="flex flex-wrap items-center justify-space-between py-3 mb-4 border-b">
-    <div class="md:flex-1">
+    <div class="md:flex-1 ml-20"> <!-- ml-5 클래스 추가 -->
       <a href="/" class="text-xl font-bold">pintravel</a>
     </div>
 
     <div class="flex-grow flex justify-center items-center">
-      <form class="flex">
-        <div class="relative"> <!-- relative 위치 추가 -->
-          <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded p-1 w-full"
-                 @input="handleInput($event)"/>
+      <form class="flex w-full max-w-md">
+        <div class="relative flex-grow">
+          <input ref="tagInput" type="text" :placeholder="placeholder" class="border rounded-l p-1 w-full"/>
         </div>
-        <button class="bg-blue-500 text-white rounded p-1 ml-2" @click.prevent="search">검색</button>
+        <button class="bg-blue-500 text-white rounded-r p-1 px-4" @click.prevent="search">검색</button>
       </form>
     </div>
 
-    <div class="md:flex-1 text-end">
+    <div class="md:flex-1 text-end mr-20"> <!-- mr-5 클래스 추가 -->
       <div v-if="!isLogin">
         <button type="button" class="btn btn-outline-primary me-2" @click="login">Login</button>
         <button type="button" class="btn btn-primary" @click="signUp">Sign-up</button>
@@ -34,16 +33,15 @@ import {selectTagByInput} from "../api/tag";
 import Tagify from '@yaireo/tagify';
 import {useUserStore} from "@/stores/user.js";
 import {storeToRefs} from "pinia";
+import iziToast from "izitoast";
 
 const router = useRouter();
-
 
 const tagInput = ref(null);
 const inputValue = ref("");
 const tags = ref([]);
 const selectedTags = ref([]);
-const placeholder = ref("태그 검색");
-
+const placeholder = ref("Tag Search");
 
 const userStore = useUserStore()
 const {isLogin} = storeToRefs(userStore);
@@ -86,17 +84,22 @@ onMounted(() => {
   tagify.on('remove', e => {
     selectedTags.value = selectedTags.value.filter(tag => tag !== e.detail.data.value);
   });
-
 });
 
 const search = () => {
   const queryTags = selectedTags.value.join(',');
-  router.push({name: 'search', query: {tags: queryTags}});
+  if (queryTags.length === 0) {
+    iziToast.info({
+      title: "No search keywords",
+      message: "Please enter search keywords.",
+      position: "bottomRight",
+      timeout: 3000,
+    });
+  } else {
+    router.push({name: 'search', query: {tags: queryTags}});
+  }
 };
 
-const handleInput = async (input) => {
-  tags.value = await selectTagByInput(input);
-};
 const login = () => {
   router.push("/login");
 };
@@ -111,5 +114,7 @@ const signUp = () => {
 </script>
 
 <style>
-/* 추가적인 스타일링이 필요하면 여기에 작성 */
+.search-bar {
+  width: 150%; /* 검색바 크기를 1.5배로 늘림 */
+}
 </style>

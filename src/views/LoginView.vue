@@ -8,7 +8,7 @@
               type="email"
               class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
               id="floatingInput"
-              placeholder="name@example.com"
+              placeholder="email@example.com"
               v-model="user.email"
             />
             <label for="floatingInput" class="text-gray-700">이메일 주소</label>
@@ -58,6 +58,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user.js";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
+import iziToast from "izitoast";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -70,13 +71,29 @@ const user = ref({
 });
 
 const submitForm = async () => {
+  if (!user.value.email || !user.value.password) {
+    iziToast.error({
+      title: '오류',
+      message: '이메일과 비밀번호를 입력해주세요.',
+      position: 'bottomRight',
+      timeout: 3000,
+    });
+    return;
+  }
+
   await userLogin(user.value);
-  const token = sessionStorage.getItem("accessToken");
+  const token = sessionStorage.getItem('accessToken');
 
   if (token) {
-    console.log("사용자 정보:", userInfo.value);
-    router.push("/");
-  }
+    console.log('사용자 정보:', userInfo.value);
+    router.push('/');
+  } else {
+    iziToast.error({
+      title: '오류',
+      message: '아이디 또는 비밀번호를 확인해주세요.',
+      position: 'bottomRight',
+      timeout: 3000,
+    });  }
 };
 
 const goToSignUp = () => {

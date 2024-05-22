@@ -124,13 +124,35 @@ const submitForm = async () => {
     return;
   }
 
+  if (selectedBoard.value === "") {
+    iziToast.error({
+      title: "오류",
+      message: "보드를 선택해주세요.",
+      position: "bottomRight",
+      timeout: 3000,
+    });
+    return;
+  }
+
+  if (selectedBoard.value === "create") {
+    if (!title.value.trim() || !description.value.trim()) {
+      iziToast.error({
+        title: "오류",
+        message: "보드 제목과 설명을 입력해주세요.",
+        position: "bottomRight",
+        timeout: 3000,
+      });
+      return;
+    }
+  }
+
   try {
     if (selectedBoard.value === "create") {
       const formData = {
         thumbnail: item.value.imageUrl,
-        title: title.value,
-        description: description.value,
-        private: isPrivate.value
+        title: title.value.trim(),
+        description: description.value.trim(),
+        private: isPrivate.value,
       };
 
       const boardId = await createBoard(formData, token);
@@ -138,29 +160,29 @@ const submitForm = async () => {
       iziToast.success({
         title: "성공",
         message: "보드가 성공적으로 생성되었고, 핀이 추가되었습니다.",
-        position: "topRight",
-        timeout: 3000
+        position: "bottomRight",
+        timeout: 3000,
       });
-      await addLike(item.value.pinId, token)
-      router.push({path: `/mypage`, query: {activeTab: 'board'}});
+      await addLike(item.value.pinId, token);
+      router.push({path: `/mypage`, query: {activeTab: "board"}});
     } else {
       await addPinBoard(item.value.pinId, selectedBoard.value, token);
       iziToast.success({
         title: "성공",
         message: "핀이 성공적으로 보드에 추가되었습니다.",
-        position: "topRight",
-        timeout: 3000
+        position: "bottomRight",
+        timeout: 3000,
       });
-      await addLike(item.value.pinId, token)
-      router.push({path: `/mypage`, query: {activeTab: 'board'}});
+      await addLike(item.value.pinId, token);
+      router.push({path: `/mypage`, query: {activeTab: "board"}});
     }
   } catch (error) {
     console.error("오류 발생:", error);
     iziToast.error({
       title: "실패",
       message: "보드 생성 또는 핀 추가 중 오류가 발생했습니다.",
-      position: "topRight",
-      timeout: 3000
+      position: "bottomRight",
+      timeout: 3000,
     });
     router.push({path: `/`});
   }

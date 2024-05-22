@@ -18,7 +18,7 @@
           <img
               :src="imagePreview"
               alt="Photo Preview"
-              class="max-w-xs rounded-lg shadow-sm"
+              class="max-w-xs rounded-lg shadow-sm w-200 h-200"
           />
         </div>
       </div>
@@ -163,22 +163,28 @@ const getHeicToJpeg = async (file) => {
 };
 
 const submitForm = async () => {
-  let errorMessage = "";
+  let errorMessage = '';
   if (!photoInput.value.files[0]) {
-    errorMessage += "사진, ";
+    errorMessage += '사진, ';
   }
   if (!title.value.trim()) {
-    errorMessage += "제목, ";
+    errorMessage += '제목, ';
   }
   if (!description.value.trim()) {
-    errorMessage += "설명, ";
+    errorMessage += '설명, ';
   }
   if (!tags.value.trim()) {
-    errorMessage += "태그, ";
+    errorMessage += '태그, ';
   }
   if (errorMessage.length > 0) {
-    errorMessage = errorMessage.slice(0, -2) + " 필드를 채워주세요.";
-    notyf.error(errorMessage);
+    errorMessage = errorMessage.slice(0, -2) + ' 필드를 채워주세요.';
+    // notyf.error(errorMessage);
+    iziToast.error({
+      title: '오류',
+      message: errorMessage,
+      position: 'bottomRight',
+      timeout: 3000,
+    });
     return;
   }
 
@@ -218,10 +224,11 @@ const uploadAndCreatePin = async (photo, pinDetails) => {
     };
     console.log("pinData", pinData);
     const response = await createPin(pinData, token);
+
     iziToast.success({
       title: "성공",
       message: "핀이 성공적으로 추가되었습니다.",
-      position: "topRight",
+      position: "bottomRight",
       timeout: 3000
     });
     router.push({path: `/mypage`, query: {activeTab: 'pin'}});
@@ -230,7 +237,7 @@ const uploadAndCreatePin = async (photo, pinDetails) => {
     iziToast.error({
       title: "실패",
       message: "보드 생성 또는 핀 추가 중 오류가 발생했습니다.",
-      position: "topRight",
+      position: "bottomRight",
       timeout: 3000
     });
     router.push({path: `/`});

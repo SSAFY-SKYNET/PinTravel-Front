@@ -13,7 +13,7 @@
           <div class="mb-6">
             <input type="email"
                    class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                   id="email" placeholder="name@example.com"
+                   id="email" placeholder="email@example.com"
                    v-model="user.email">
             <label for="email" class="text-gray-700">이메일 주소</label>
           </div>
@@ -30,9 +30,6 @@
                    id="profilePicture" placeholder="프로필 사진"
                    @change="onFileChange">
             <label for="profilePicture" class="text-gray-700">프로필 사진</label>
-          </div>
-          <div class="mb-6 text-start" v-if="isSignupError">
-            <div class="alert alert-danger" role="alert">회원가입에 실패했습니다. 다시 시도해주세요.</div>
           </div>
           <button
               class="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
@@ -53,6 +50,7 @@ import {useRouter} from 'vue-router';
 import {useUserStore} from "@/stores/user.js";
 import {ref} from 'vue';
 import {storeToRefs} from "pinia";
+import iziToast from "izitoast";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -71,6 +69,16 @@ const onFileChange = (event) => {
 };
 
 const submitForm = async () => {
+  if (!user.value.username || !user.value.email || !user.value.password) {
+    iziToast.error({
+      title: '오류',
+      message: '사용자 이름, 이메일, 비밀번호를 모두 입력해주세요.',
+      position: 'bottomRight',
+      timeout: 3000,
+    });
+    return;
+  }
+
   const formData = new FormData();
   formData.append('username', user.value.username);
   formData.append('email', user.value.email);
@@ -84,6 +92,13 @@ const submitForm = async () => {
 
   if (!isSignupError.value) {
     router.push("/login");
+  } else {
+    iziToast.error({
+      title: '오류',
+      message: '회원가입에 실패했습니다. 다시 시도해주세요.',
+      position: 'bottomRight',
+      timeout: 3000,
+    });
   }
 };
 
