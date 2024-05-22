@@ -17,12 +17,10 @@
 <script setup>
 import PinItemList from "@/components/PinItemList.vue";
 import PinDetail from "@/components/PinDetail.vue";
-import { selectTagByPinId } from "@/api/pintag.js";
 
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { getPinsByPinIdAndPage } from "@/api/pin.js";
-import { selectTagsByIds } from "@/api/tag.js";
 
 const route = useRoute();
 const items = ref([]);
