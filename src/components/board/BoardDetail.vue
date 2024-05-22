@@ -2,110 +2,66 @@
   <section class="bg-white dark:bg-gray-950 py-8 md:py-12">
     <div class="container mx-auto px-4 md:px-6">
       <div v-if="item && items.length > 0" class="w-full p-2 flex flex-row h-[400px] mb-6 md:mb-8">
-        <div class="w-1/2 border p-2 overflow-y-auto">
-          <ul>
-            <li v-for="pin in items" :key="pin.pinId" class="cursor-pointer">
-              <router-link :to="`/pin/${pin.pinId}`">
+        <div class="w-1/2 border border-gray-200 rounded-lg p-4 overflow-y-auto">
+          <ul class="space-y-2">
+            <li v-for="pin in items" :key="pin.pinId" class="cursor-pointer hover:bg-gray-100 rounded-md">
+              <router-link :to="`/pin/${pin.pinId}`" class="block px-4 py-2">
                 {{ pin.title }}
               </router-link>
             </li>
           </ul>
         </div>
         <MapDisplay
-            class="w-1/2 border p-2"
+            class="w-1/2 border border-gray-200 rounded-lg p-4"
             :pins="items"
         />
       </div>
-      <div v-if="item && !isModify" class="mb-6 md:mb-8 flex justify-between items-center">
-        <h2 class="text-2xl md:text-3xl font-bold">{{ item.title }}</h2>
-        <svg
-            v-if="item.private"
-            class="w-4 h-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        >
-          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
+      <div v-if="item && !isModify" class="mb-6 md:mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl md:text-3xl font-bold">{{ item.title }}</h2>
+          <svg
+              v-if="item.private"
+              class="w-4 h-4 text-gray-600"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+          >
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-base md:text-lg">{{ item.description }}</p>
       </div>
-      <div v-else-if="isModify" class="mb-6 md:mb-8">
-        <form @submit.prevent="submitForm">
-          <div class="mb-4">
-            <label for="title" class="block font-medium text-gray-700">Title</label>
-            <input
-                type="text"
-                id="title"
-                v-model="modifiedItem.title"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-          <div class="mb-4">
-            <label for="description" class="block font-medium text-gray-700">Description</label>
-            <textarea
-                id="description"
-                v-model="modifiedItem.description"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            ></textarea>
-          </div>
-          <div class="mb-4">
-            <label for="private" class="inline-flex items-center">
-              <input
-                  type="checkbox"
-                  id="private"
-                  v-model="modifiedItem.private"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-              <span class="ml-2 text-gray-700">Private</span>
-            </label>
-          </div>
-          <div class="flex justify-end">
-            <button
-                type="submit"
-                class="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Save
-            </button>
-            <button
-                type="button"
-                @click="cancelModify"
-                class="ml-4 px-4 py-2 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-      <p v-if="item && !isModify" class="text-gray-500 dark:text-gray-400 text-base md:text-lg mb-6 md:mb-8">{{
-          item.description
-        }}</p>
-      <div v-if="!isModify" class="flex justify-end mb-6 md:mb-8">
+      <!-- ... -->
+      <div v-if="!isModify" class="flex justify-end space-x-4 mb-6 md:mb-8">
         <button
             @click="makeTravelPlan"
-            class="mr-4 px-4 py-2 border border-green-300 rounded-md text-green-700 hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+            class="px-4 py-2 border border-green-500 rounded-md text-green-500 hover:bg-green-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           Make Plan
         </button>
         <button
             @click="startModify"
-            class="mr-4 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            class="px-4 py-2 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           Edit Board
         </button>
         <button
             @click="deleteButton"
-            class="px-4 py-2 border border-red-500 rounded-md text-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-200"
+            class="px-4 py-2 border border-red-500 rounded-md text-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400"
         >
           Delete Board
         </button>
       </div>
     </div>
     <div v-if="isPlan">
-      <div v-html="planData"></div>
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div v-html="planData" class="text-gray-700"></div>
+      </div>
     </div>
     <div ref="scrollContainer" class="h-[calc(100vh)] overflow-y-auto flex justify-center main">
       <div
