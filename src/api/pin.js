@@ -92,6 +92,15 @@ const getPinsByPinIdAndPage = async (pinId, page = 1, limit = 30) => {
   );
   return response.data;
 };
+
+const getPinByBoardAndPage = async (boardId, page = 1, limit = 30) => {
+  const response = await axios
+      .get(`${API_URL}/pin/board/${boardId}/page?page=${page}&limit=${limit}`)
+      .catch((err) => console.error(err));
+
+  return response.data;
+};
+
 export {
   getPinByPage,
   getPinDetailById,
@@ -100,4 +109,5 @@ export {
   createPin,
   uploadImage,
   getPinsByPinIdAndPage,
+  getPinByBoardAndPage,
 };
