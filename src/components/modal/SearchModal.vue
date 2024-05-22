@@ -46,7 +46,6 @@ onMounted(() => {
 
   tagify.on('input', async e => {
     inputValue.value = e.detail.value
-    console.log("tagify on " + e.detail.value)
     tags.value = await selectTagByInput(inputValue.value);
     tagify.settings.whitelist = tags.value.map(tag => tag.name);
     tagify.dropdown.show.call(tagify, inputValue.value);
