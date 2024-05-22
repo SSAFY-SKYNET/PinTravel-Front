@@ -8,7 +8,8 @@ import BoardDetail from "@/components/board/BoardDetail.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import CreateView from "@/views/CreateView.vue";
 import TestView from "@/views/TestView.vue";
-import {Notyf} from "notyf";
+import LoginSuccessView from "@/views/LoginSuccessView.vue";
+import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import BoardCreate from "@/components/board/BoardCreate.vue";
 import iziToast from "izitoast"; // for React, Vue and Svelte
@@ -100,6 +101,11 @@ const router = createRouter({
             path: "/test",
             name: "test",
             component: TestView,
+        },
+        {
+            path: "/loginSuccess",
+            name: "login-success",
+            component: LoginSuccessView,
         },
     ],
 });
