@@ -85,6 +85,12 @@
         }}</p>
       <div v-if="!isModify" class="flex justify-end mb-6 md:mb-8">
         <button
+            @click="makeTravelPlan"
+            class="mr-4 px-4 py-2 border border-green-300 rounded-md text-green-700 hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
+          Make Plan
+        </button>
+        <button
             @click="startModify"
             class="mr-4 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
@@ -97,6 +103,9 @@
           Delete Board
         </button>
       </div>
+    </div>
+    <div v-if="isPlan">
+      <div v-html="planData"></div>
     </div>
     <div ref="scrollContainer" class="h-[calc(100vh)] overflow-y-auto flex justify-center main">
       <div
@@ -117,6 +126,9 @@ import {getPinByBoardAndPage} from "@/api/pin.js";
 import MapDisplay from "@/components/detail/MapDisplay.vue";
 import iziToast from "izitoast";
 
+import OpenAI from 'openai'
+import {generateTravelPlan} from "@/api/openAi.js";
+
 const item = ref(null);
 const route = useRoute();
 
@@ -130,6 +142,9 @@ let observer;
 
 const isModify = ref(false);
 const modifiedItem = ref({});
+
+const isPlan = ref(false)
+const planData = ref('')
 
 const loadData = async () => {
   if (route.params.id) {
@@ -223,6 +238,22 @@ const deleteButton = () => {
 
 const handleDeleteBoard = async () => {
   await deleteBoard(route.params.id);
+};
+
+const makeTravelPlan = async () => {
+  isPlan.value = !isPlan.value;
+
+  try {
+    const plan = await generateTravelPlan(items.value);
+    planData.value = plan;  } catch (error) {
+    console.error('Failed to generate travel plan', error);
+    iziToast.error({
+      title: 'Error',
+      message: 'Failed to generate travel plan. Please try again later.',
+      position: 'topRight',
+      timeout: 5000,
+    });
+  }
 };
 </script>
 
