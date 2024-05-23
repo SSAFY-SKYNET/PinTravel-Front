@@ -60,7 +60,7 @@ const createPin = async (pinData, token) => {
       },
     });
     return response.data;
-  } catch (error) {
+  } catch (error) {f
     console.error("핀 생성 오류:", error);
     throw error;
   }
