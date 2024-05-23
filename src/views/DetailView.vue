@@ -25,7 +25,7 @@ import { getPinsByPinIdAndPage } from "@/api/pin.js";
 const route = useRoute();
 const items = ref([]);
 const page = ref(1);
-const limit = 10;
+const limit = 30;
 const scrollContainer = ref(null);
 const observerElement = ref(null);
 const pinId = route.params.id;

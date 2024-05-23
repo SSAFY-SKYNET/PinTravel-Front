@@ -16,8 +16,8 @@ const searchTags = ref([]);
 const { isLogin } = storeToRefs(userStore);
 
 const handleScrollToTop = () => {
-  window.scrollTo(0,0);
-}
+  window.scrollTo(0, 0);
+};
 
 const handleSearch = async (tags) => {
   searchTags.value = tags;
@@ -53,5 +53,9 @@ onUpdated(() => {
 .main::-webkit-scrollbar-track {
   background: rgb(255, 255, 255);
   /* 스크롤바 뒷 배경 색상 */
+}
+
+body {
+  background-color: #f5f5f5;
 }
 </style>
