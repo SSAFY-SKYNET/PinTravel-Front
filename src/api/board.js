@@ -95,4 +95,13 @@ const deleteBoard = async (boardId) => {
     }
 };
 
-export {getBoardByUserId, getBoardListByUserId, getBoardDetailById, createBoard, updateBoard, deleteBoard};
+const updateThumbnail = async (boardId) => {
+    try {
+        await axios.put(`${API_URL}/board/thumbnail/${boardId}`);
+    } catch (error) {
+        console.error("보드 썸네일 수정 오류:", error);
+        throw error;
+    }
+}
+
+export {getBoardByUserId, getBoardListByUserId, getBoardDetailById, createBoard, updateBoard, deleteBoard, updateThumbnail};

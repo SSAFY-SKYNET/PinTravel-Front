@@ -79,3 +79,9 @@ const closeModal = () => {
   emit('close');
 };
 </script>
+
+<style scoped>
+.bg-white {
+  width: 500px; /* 검색바 크기를 1.5배로 늘림 */
+}
+</style>
