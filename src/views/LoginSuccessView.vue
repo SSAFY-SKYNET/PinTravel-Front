@@ -1,48 +1,32 @@
 <template>
   <div>
-    <KakaoMap
-      :lat="defaultLatitude"
-      :lng="defaultLongitude"
-      :draggable="true"
-      :level="mapLevel"
-      width="100%"
-      height="100%"
-    >
-      <KakaoMapMarker
-        v-for="marker in computedMarkers"
-        :key="marker.pinId"
-        :lat="marker.latitude"
-        :lng="marker.longitude"
-      />
-    </KakaoMap>
+    <!-- 로그인 처리 중 표시할 메시지 또는 로더 -->
+    <p>로그인 처리 중입니다. 잠시만 기다려주세요...</p>
   </div>
 </template>
 
 <script setup>
-import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
-import { computed, defineProps } from "vue";
+import { onMounted, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
-const props = defineProps({
-  latitude: Number,
-  longitude: Number,
-  pins: Array,
+const router = useRouter();
+const route = useRoute();
+
+onMounted(() => {
+  // URL 쿼리에서 토큰 추출 및 디코딩
+  const accessToken = decodeURIComponent(route.query.accessToken);
+  const refreshToken = decodeURIComponent(route.query.refreshToken);
+
+  if (accessToken && refreshToken) {
+    // 세션 스토리지에 토큰 저장
+    sessionStorage.setItem("accessToken", accessToken);
+    sessionStorage.setItem("refreshToken", refreshToken);
+
+    // 홈 페이지로 리디렉션
+    router.push("/");
+  } else {
+    // 토큰이 없는 경우 로그인 페이지로 리디렉션
+    router.push("/login");
+  }
 });
-
-const computedMarkers = computed(() => {
-  return props.pins.length > 0
-    ? props.pins
-    : [{ latitude: props.latitude, longitude: props.longitude }];
-});
-
-const defaultLatitude = computed(
-  () =>
-    computedMarkers.value.reduce((sum, marker) => sum + marker.latitude, 0) /
-    computedMarkers.value.length
-);
-const defaultLongitude = computed(
-  () =>
-    computedMarkers.value.reduce((sum, marker) => sum + marker.longitude, 0) /
-    computedMarkers.value.length
-);
-const mapLevel = computed(() => (props.pins.length > 0 ? 15 : 4));
 </script>
