@@ -107,8 +107,6 @@ import { getPinByBoardAndPage } from "@/api/pin.js";
 import MapDisplay from "@/components/detail/MapDisplay.vue";
 import iziToast from "izitoast";
 
-import { generateTravelPlan } from "@/api/openAi.js";
-
 const item = ref(null);
 const route = useRoute();
 

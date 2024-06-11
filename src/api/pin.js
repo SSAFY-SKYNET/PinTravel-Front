@@ -4,6 +4,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const getPinByPage = async (page = 1, limit = 30) => {
+  console.log(`${API_URL}/pin/likes/page?page=${page}&limit=${limit}`);
   const response = await axios
     .get(`${API_URL}/pin/likes/page?page=${page}&limit=${limit}`)
     .catch((err) => console.error(err));
@@ -60,7 +61,8 @@ const createPin = async (pinData, token) => {
       },
     });
     return response.data;
-  } catch (error) {f
+  } catch (error) {
+    f;
     console.error("핀 생성 오류:", error);
     throw error;
   }
@@ -95,8 +97,8 @@ const getPinsByPinIdAndPage = async (pinId, page = 1, limit = 30) => {
 
 const getPinByBoardAndPage = async (boardId, page = 1, limit = 30) => {
   const response = await axios
-      .get(`${API_URL}/pin/board/${boardId}/page?page=${page}&limit=${limit}`)
-      .catch((err) => console.error(err));
+    .get(`${API_URL}/pin/board/${boardId}/page?page=${page}&limit=${limit}`)
+    .catch((err) => console.error(err));
 
   return response.data;
 };

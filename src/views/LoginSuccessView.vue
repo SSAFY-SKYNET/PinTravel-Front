@@ -6,13 +6,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
 
 onMounted(() => {
+  console.log("로그인 성공");
   // URL 쿼리에서 토큰 추출 및 디코딩
   const accessToken = decodeURIComponent(route.query.accessToken);
   const refreshToken = decodeURIComponent(route.query.refreshToken);

@@ -374,9 +374,6 @@ onMounted(async () => {
     if (boardObserverElement.value) {
       boardObserver.observe(boardObserverElement.value);
     }
-
-    // 초기 pin 목록 로드
-    await loadPins();
   });
 });
 </script>

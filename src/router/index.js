@@ -7,8 +7,9 @@ import UserInfoView from "@/views/UserInfoView.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import CreateView from "@/views/CreateView.vue";
-import TestView from "@/views/TestView.vue";
+
 import LoginSuccessView from "@/views/LoginSuccessView.vue";
+
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import BoardCreate from "@/components/board/BoardCreate.vue";
@@ -106,11 +107,6 @@ const router = createRouter({
           next();
         }
       },
-    },
-    {
-      path: "/test",
-      name: "test",
-      component: TestView,
     },
     {
       path: "/loginSuccess",

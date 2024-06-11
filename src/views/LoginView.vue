@@ -38,13 +38,9 @@
           <!-- ouath-login -->
           <div class="flex justify-center mt-6">
             <a
-              href="http://ec2-54-236-252-216.compute-1.amazonaws.com/oauth2/authorization/google?prompt=select_account"
+              :href="`${baseUrl}/oauth2/authorization/google?prompt=select_account`"
               class="google-login-button"
             >
-              <!-- <a
-              href="http://localhost:80/oauth2/authorization/google?prompt=select_account"
-              class="google-login-button"
-            > -->
               <div class="google-icon-wrapper">
                 <img
                   class="google-icon"
@@ -77,6 +73,8 @@ const router = useRouter();
 const userStore = useUserStore();
 const { isLoginError, userInfo } = storeToRefs(userStore);
 const { userLogin } = userStore;
+
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const user = ref({
   email: "",
